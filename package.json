@@ -1,0 +1,26 @@
+{
+  "name": "@seneca/maintain",
+  "version": "0.0.2",
+  "description": "Run maintenance tests for Seneca plugins.",
+  "main": "maintain.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/senecajs/seneca-maintain.git"
+  },
+  "keywords": [
+    "seneca",
+    "maintain"
+  ],
+  "author": "Ríona Stokes https://github.com/stokesriona",
+  "contributors": [
+    "Richard Rodger https://github.com/rjrodger"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/senecajs/seneca-maintain/issues"
+  },
+  "homepage": "https://github.com/senecajs/seneca-maintain#readme"
+}
