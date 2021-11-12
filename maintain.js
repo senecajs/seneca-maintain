@@ -15,7 +15,11 @@ module.exports = () => {
     console.log('runChecksPrep()\n')
 
     // config definition
-    // here
+    var argString = process.argv.slice(2)
+    if (null == argString[0]) {
+      argString[0] = "base"
+    }
+    const argArray = argString[0].split(',')
 
     // backing out of test directory
     process.chdir('../')
@@ -63,10 +67,7 @@ module.exports = () => {
     const relCheckList = {}
     for (const checkName in checkList) {
       let checkDetails = checkList[checkName]
-      // if (argArray.includes(checkDetails.config)){
-      //   relCheckList[checkName] = checkDetails
-      // }
-      if("content_contain_json" == checkDetails.kind){
+      if (argArray.includes(checkDetails.config)){
         relCheckList[checkName] = checkDetails
       }
     }
