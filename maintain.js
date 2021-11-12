@@ -59,15 +59,16 @@ module.exports = () => {
     console.log(dataKeys)
     console.log('Package name :', dataForChecks.packageName)
 
-    // const relCheckList = {}
-    // for (const checkName in checkList) {
-    //   let checkDetails = checkList[checkName]
-    //   if (argArray.includes(checkDetails.config)){
-    //     relCheckList[checkName] = checkDetails
-    //   }
-    // }
-    console.log(checkList)
-
+    const relCheckList = {}
+    for (const checkName in checkList) {
+      let checkDetails = checkList[checkName]
+      // if (argArray.includes(checkDetails.config)){
+      //   relCheckList[checkName] = checkDetails
+      // }
+      relCheckList[checkName] = checkDetails
+    }
+    var checkNames = Object.keys(relCheckList)
+    console.log(checkNames)
   }
 
   async function runChecks(){}
