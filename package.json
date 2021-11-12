@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/senecajs/seneca-maintain#readme",
   "dependencies": {
-    "chalk": "^4.1.2"
+    "chalk": "^4.1.2",
+    "filehound": "^1.17.5"
   }
 }
