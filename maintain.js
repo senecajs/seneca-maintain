@@ -65,7 +65,7 @@ module.exports = () => {
       // if (argArray.includes(checkDetails.config)){
       //   relCheckList[checkName] = checkDetails
       // }
-      if("fileX_exist_if_contain_json" == checkDetails.kind){
+      if("content_contain_string" == checkDetails.kind){
         relCheckList[checkName] = checkDetails
       }
     }
@@ -178,36 +178,36 @@ module.exports = () => {
         }
       },
 
-  //     content_contain_string: async function(checkDetails,dataForChecks) {
+      content_contain_string: async function(checkDetails,dataForChecks) {
 
-  //       let file = checkDetails.file
-  //       let pass = file in dataForChecks
-  //       let searchContent = checkDetails.contains
-  //       let why = "file_not_found"
+        let file = checkDetails.file
+        let pass = file in dataForChecks
+        let searchContent = checkDetails.contains
+        let why = "file_not_found"
 
-  //       if (true == pass) {
-  //         const fileContent = dataForChecks[file]
+        if (true == pass) {
+          const fileContent = dataForChecks[file]
 
-  //         for (let i = 0; i < searchContent.length; i++) {
-  //           pass = fileContent.includes(searchContent[i])
-  //         }
+          for (let i = 0; i < searchContent.length; i++) {
+            pass = fileContent.includes(searchContent[i])
+          }
           
-  //         if (true == pass) {
-  //           why = "content_found"
-  //         }
-  //         else {
-  //           why = "content_not_found"
-  //         }
-  //       }
+          if (true == pass) {
+            why = "content_found"
+          }
+          else {
+            why = "content_not_found"
+          }
+        }
 
-  //       return {
-  //         check: checkDetails.name,
-  //         kind: checkDetails.kind,
-  //         file: file,
-  //         pass: pass,
-  //         why: why,
-  //       }
-  //     },
+        return {
+          check: checkDetails.name,
+          kind: checkDetails.kind,
+          file: file,
+          pass: pass,
+          why: why,
+        }
+      },
 
   //     content_contain_markdown: async function(checkDetails,dataForChecks) {
   //       let file = checkDetails.file
