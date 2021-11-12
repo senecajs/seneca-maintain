@@ -6,12 +6,14 @@ module.exports = () => {
 
   console.log('Running maintain from @seneca/maintain')
 
-  async function run(){
-    console.log('Run function')
+  console.log('Starting dir : ',process.cwd())
+  process.chdir('../')
+  console.log('Current dir : ',process.cwd())
 
-    console.log('Starting dir : ',process.cwd())
-    process.chdir('../')
-    console.log('Current dir : ',process.cwd())
+  async function runChecksPrep(){
+    console.log('\nrunChecksPrep function')
+
+    
 
     // reading client's json files in
     const jsonPromise = Filehound.create()
@@ -59,6 +61,6 @@ module.exports = () => {
 
   }
 
-  run()
+  runChecksPrep()
 }
 // "undefined" is returned if test file calls a console log of module instead of calling module function directly
