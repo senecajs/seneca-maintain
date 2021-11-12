@@ -10,7 +10,7 @@ module.exports = () => {
   console.log('Running maintain from @seneca/maintain')
 
   async function runChecksPrep(){
-    console.log('\nrunChecksPrep function')
+    console.log('runChecksPrep()\n')
 
     // config definition
 
@@ -54,6 +54,9 @@ module.exports = () => {
       dataForChecks[fileName] = fileContent
     }
 
+    var fileKeys = Object.keys(dataForChecks)
+    console.log(fileKeys)
+
     const relCheckList = {}
     for (const checkName in checkList) {
       let checkDetails = checkList[checkName]
@@ -63,9 +66,8 @@ module.exports = () => {
       if("file_exist" == checkDetails.kind){
         relCheckList[checkName] = checkDetails
       }
-      
     }
-    
+    // console.log(relCheckList)
     return {
       relCheckList: relCheckList,
       dataForChecks: dataForChecks
@@ -73,16 +75,17 @@ module.exports = () => {
   }
 
   async function runChecks(){
+    console.log('runChecks()\n')
     let prep = await runChecksPrep()
-    let relCheckList = prep.relCheckList
-    let dataForChecks = prep.dataForChecks
+    let relCheckList = prep.relCheckList //ok
+    let dataForChecks = prep.dataForChecks //ok
     let results = {}
 
     for(const checkName in relCheckList) {
-      let checkDetails = checkList[checkName]
-      checkDetails.name = checkName
+      let checkDetails = checkList[checkName] //ok 
+      checkDetails.name = checkName //ok
 
-      let checkKind = checkOps[checkDetails.kind]
+      let checkKind = checkOps[checkDetails.kind] // now ok
       // ensure check operation is detailed below
       if(null == checkKind) {
         console.log('WARNING','Check does not exist', checkName)
@@ -90,15 +93,16 @@ module.exports = () => {
         continue
       }
       let res = await checkKind(checkDetails,dataForChecks)
-      console.log('\n',res)
+      console.log('\n\n',res)
       results[checkName] = res
     }
     return results
   }
 
-  runChecksPrep()
+  // runChecksPrep()
+  runChecks()
 
-  async function checkOperations() {
+  function checkOperations() {
 
     return {
       file_exist: async function(checkDetails,dataForChecks) {
