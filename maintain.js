@@ -69,28 +69,28 @@ module.exports = () => {
     }
   }
 
-  // async function runChecks(){
-  //   let prep = await runChecksPrep()
-  //   let relCheckList = prep.relCheckList
-  //   let dataForChecks = prep.dataForChecks
-  //   let results = {}
+  async function runChecks(){
+    let prep = await runChecksPrep()
+    let relCheckList = prep.relCheckList
+    let dataForChecks = prep.dataForChecks
+    let results = {}
 
-  //   for(const checkName in relCheckList) {
-  //     let checkDetails = checkList[checkName]
-  //     checkDetails.name = checkName
+    for(const checkName in relCheckList) {
+      let checkDetails = checkList[checkName]
+      checkDetails.name = checkName
 
-  //     let checkKind = checkOps[checkDetails.kind]
-  //     // ensure check operation is detailed below
-  //     if(null == checkKind) {
-  //       console.log('WARNING','Check does not exist', checkName)
-  //       // proceed to next check
-  //       continue
-  //     }
-  //     let res = await checkKind(checkDetails,dataForChecks)
-  //     results[checkName] = res
-  //   }
-  //   return results
-  // }
+      let checkKind = checkOps[checkDetails.kind]
+      // ensure check operation is detailed below
+      if(null == checkKind) {
+        console.log('WARNING','Check does not exist', checkName)
+        // proceed to next check
+        continue
+      }
+      let res = await checkKind(checkDetails,dataForChecks)
+      results[checkName] = res
+    }
+    return results
+  }
 
   runChecksPrep()
 
