@@ -13,6 +13,10 @@ module.exports = () => {
     console.log('runChecksPrep()\n')
 
     // config definition
+    // here
+
+    // backing out of test directory
+    process.chdir('../')
 
     // reading client's json files in
     const jsonPromise = Filehound.create()
@@ -53,9 +57,6 @@ module.exports = () => {
 
       dataForChecks[fileName] = fileContent
     }
-
-    var fileKeys = Object.keys(dataForChecks)
-    console.log(fileKeys)
 
     const relCheckList = {}
     for (const checkName in checkList) {
