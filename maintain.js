@@ -66,7 +66,7 @@ module.exports = () => {
       // if (argArray.includes(checkDetails.config)){
       //   relCheckList[checkName] = checkDetails
       // }
-      if("content_contain_markdown" == checkDetails.kind){
+      if("content_contain_json" == checkDetails.kind){
         relCheckList[checkName] = checkDetails
       }
     }
@@ -254,47 +254,47 @@ module.exports = () => {
         }
       },
 
-  //     content_contain_json: async function(checkDetails,dataForChecks) {
+      content_contain_json: async function(checkDetails,dataForChecks) {
 
-  //       let file = checkDetails.file
-  //       let pass = file in dataForChecks
-  //       let searchContent = checkDetails.contains
-  //       let containsType = checkDetails.contains_type
-  //       // let searchLevels = Object.values(searchContent)
-  //       let why = "file_not_found"
+        let file = checkDetails.file
+        let pass = file in dataForChecks
+        let searchContent = checkDetails.contains
+        let containsType = checkDetails.contains_type
+        // let searchLevels = Object.values(searchContent)
+        let why = "file_not_found"
 
-  //       if (true == pass) {
-  //         const fileContent = dataForChecks[file]
-  //         if ("key" == containsType) {
-  //           // clean this up
-  //           // let chain = []
-  //           // for (let i = 0; i < searchContent.length; i++) {
-  //           //     chain.push(searchContent[i])
-  //           // }
-  //           pass = (null != (Hoek.reach(fileContent,searchContent)))
+        if (true == pass) {
+          const fileContent = dataForChecks[file]
+          if ("key" == containsType) {
+            // clean this up
+            // let chain = []
+            // for (let i = 0; i < searchContent.length; i++) {
+            //     chain.push(searchContent[i])
+            // }
+            pass = (null != (Hoek.reach(fileContent,searchContent)))
 
-  //         }
-  //         else { // add in "else if" clause if searching for json value
-  //           console.log("Content type not recognised.")
-  //           pass = false
-  //         }
+          }
+          else { // add in "else if" clause if searching for json value
+            console.log("Content type not recognised.")
+            pass = false
+          }
           
-  //         if (true == pass) {
-  //           why = "content_found"
-  //         }
-  //         else {
-  //           why = "content_not_found"
-  //         }
-  //       }
+          if (true == pass) {
+            why = "content_found"
+          }
+          else {
+            why = "content_not_found"
+          }
+        }
 
-  //       return {
-  //         check: checkDetails.name,
-  //         kind: checkDetails.kind,
-  //         file: file,
-  //         pass: pass,
-  //         why: why,
-  //       }
-  //     },
+        return {
+          check: checkDetails.name,
+          kind: checkDetails.kind,
+          file: file,
+          pass: pass,
+          why: why,
+        }
+      },
 
     }
   }
