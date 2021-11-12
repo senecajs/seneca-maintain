@@ -3,6 +3,7 @@ module.exports = () => {
   const Filehound = require('filehound')
   const Path = require('path')
   const Fs = require('fs')
+  const Hoek = require('@hapi/hoek')
 
   const checkList = require('./checks')
   const checkOps = checkOperations()
@@ -64,7 +65,7 @@ module.exports = () => {
       // if (argArray.includes(checkDetails.config)){
       //   relCheckList[checkName] = checkDetails
       // }
-      if("file_exist" == checkDetails.kind){
+      if("fileX_exist_if_contain_json" == checkDetails.kind){
         relCheckList[checkName] = checkDetails
       }
     }
@@ -123,63 +124,59 @@ module.exports = () => {
         }
       },
 
-  //     fileX_exist_if_contain_json: async function(checkDetails,dataForChecks) {
+      fileX_exist_if_contain_json: async function(checkDetails,dataForChecks) {
 
-  //       let file = checkDetails.file
-  //       let ifFile = checkDetails.if_file
-  //       let pass = ifFile in dataForChecks
-  //       let why = "json_file_not_found"
-  //       let searchContent = checkDetails.contains
-  //       let searchIsNot = checkDetails.contains_is_not
-  //       let containsType = checkDetails.contains_type
-  //       let config = checkDetails.config
+        let file = checkDetails.file
+        let ifFile = checkDetails.if_file
+        let pass = ifFile in dataForChecks
+        let why = "json_file_not_found"
+        let searchContent = checkDetails.contains
+        let searchIsNot = checkDetails.contains_is_not
+        let containsType = checkDetails.contains_type
+        let config = checkDetails.config
 
-  //       if (true == pass) {
-  //         const ifFileContent = dataForChecks[ifFile]
-  //         if ("key" == containsType) {
-  //           // let chain = []
-  //           // for (let i = 0; i < searchContent.length; i++) {
-  //           //     chain.push(searchContent[i])
-  //           // }
-  //           var searchIs = Hoek.reach(ifFileContent,searchContent)
-  //           pass = (null != searchIs && searchIsNot != searchIs)
+        if (true == pass) {
+          const ifFileContent = dataForChecks[ifFile]
+          if ("key" == containsType) {
+            var searchIs = Hoek.reach(ifFileContent,searchContent)
+            pass = (null != searchIs && searchIsNot != searchIs)
 
-  //         }
-  //         else { // add in "else if" clause if searching for json value
-  //           console.log("Content type not recognised.")
-  //           pass = false
-  //         }
+          }
+          else { // add in "else if" clause if searching for json value
+            console.log("Content type not recognised.")
+            pass = false
+          }
 
-  //         if (true == pass) {
-  //           if ("js" == config) {
-  //             file = searchIs
-  //             pass = file in dataForChecks
-  //           }
-  //           if ("ts" == config) {
-  //             file = Path.basename(searchIs,'.js')+'.ts'
-  //             pass = file in dataForChecks
-  //           }
+          if (true == pass) {
+            if ("js" == config) {
+              file = searchIs
+              pass = file in dataForChecks
+            }
+            if ("ts" == config) {
+              file = Path.basename(searchIs,'.js')+'.ts'
+              pass = file in dataForChecks
+            }
 
-  //           if (true == pass) {
-  //             why = "file_found"
-  //           }
-  //           else {
-  //             why = "file_not_found"
-  //           }
-  //         }
-  //         else {
-  //           why = "incorrect_value"
-  //         } 
-  //       }
+            if (true == pass) {
+              why = "file_found"
+            }
+            else {
+              why = "file_not_found"
+            }
+          }
+          else {
+            why = "incorrect_value"
+          } 
+        }
 
-  //       return {
-  //         check: checkDetails.name,
-  //         kind: checkDetails.kind,
-  //         file: file,
-  //         pass: pass,
-  //         why: why,
-  //       }
-  //     },
+        return {
+          check: checkDetails.name,
+          kind: checkDetails.kind,
+          file: file,
+          pass: pass,
+          why: why,
+        }
+      },
 
   //     content_contain_string: async function(checkDetails,dataForChecks) {
 
