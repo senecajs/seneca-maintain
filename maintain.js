@@ -1,24 +1,33 @@
 module.exports = () => {
 
   const Filehound = require('filehound')
+  const Path = require('path')
+  const Fs = require('fs')
+
   console.log('Running maintain from @seneca/maintain')
 
-  function run(){
+  async function run(){
     console.log('Run function')
 
     console.log('Starting dir : ',process.cwd())
     process.chdir('../')
     console.log('Current dir : ',process.cwd())
 
-    Filehound.create()
+    const stringPromise = Filehound.create()
       .paths(process.cwd())
-      .discard(/node_modules/,/.git/)
-      .find()
-      .then(files => {
-        files.forEach(file => console.log('Found file', file));
-      }) // this is a promise, it will print at the end of the run
+      .discard(/node_modules/,/.git/,/.json/)
+      .find();
+    const stringFiles = await stringPromise
 
-    
+    for (let s = 0; s < stringFiles.length; s++) {
+      let filePath = stringFiles[s]
+
+      let fileName = Path.basename(filePath)
+      let fileContent = Fs.readFileSync(filePath, 'utf-8')
+
+      console.log(fileName)
+    }
+
   }
 
   run()
