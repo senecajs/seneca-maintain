@@ -4,6 +4,7 @@ module.exports = () => {
   const Path = require('path')
   const Fs = require('fs')
   const Hoek = require('@hapi/hoek')
+  const Marked = require('marked')
 
   const checkList = require('./checks')
   const checkOps = checkOperations()
@@ -65,7 +66,7 @@ module.exports = () => {
       // if (argArray.includes(checkDetails.config)){
       //   relCheckList[checkName] = checkDetails
       // }
-      if("content_contain_string" == checkDetails.kind){
+      if("content_contain_markdown" == checkDetails.kind){
         relCheckList[checkName] = checkDetails
       }
     }
@@ -209,52 +210,49 @@ module.exports = () => {
         }
       },
 
-  //     content_contain_markdown: async function(checkDetails,dataForChecks) {
-  //       let file = checkDetails.file
-  //       let pass = file in dataForChecks
-  //       let why = "file_not_found"
-  //       if (true == pass){
-  //         why = "file_found"
+      content_contain_markdown: async function(checkDetails,dataForChecks) {
+        let file = checkDetails.file
+        let pass = file in dataForChecks
+        let why = "file_not_found"
+        if (true == pass){
+          why = "file_found"
 
-  //         let searchArray = checkDetails.contains
-  //         // Reassignment of #1 heading text
-  //         searchArray[0].text = dataForChecks.packageName
-  //         console.log(searchArray[0].text)
+          let searchArray = checkDetails.contains
+          // Reassignment of #1 heading text
+          searchArray[0].text = dataForChecks.packageName
 
-  //         let fileContent = dataForChecks[file]
-  //         // Creating AST from file
-  //         const lexer = new Marked.Lexer()
-  //         const tokens = lexer.lex(fileContent)
-  //         const headings = tokens.filter(token => "heading" == token.type 
-  //           && (1 == token.depth || 2 == token.depth))
+          let fileContent = dataForChecks[file]
+          // Creating AST from file
+          const lexer = new Marked.Lexer()
+          const tokens = lexer.lex(fileContent)
+          const headings = tokens.filter(token => "heading" == token.type 
+            && (1 == token.depth || 2 == token.depth))
 
-  //         if (headings.length == searchArray.length) {
-  //           console.log(searchArray.length)
-  //           for (let i = 0 ; i < searchArray.length; i++) {
-  //             console.log(i)
-  //             pass = ((headings[i].depth == searchArray[i].depth) 
-  //               && (headings[i].text == searchArray[i].text))
-  //             if (false == pass) {
-  //               let nb = i+1
-  //               why = "heading_\""+searchArray[i].text+"\"_not_found"
-  //               break
-  //             }
-  //           }
-  //         }
-  //         else {
-  //           pass = false
-  //           why = "nb_headings_incorrect"
-  //         }
-  //       }
+          if (headings.length == searchArray.length) {
+            for (let i = 0 ; i < searchArray.length; i++) {
+              pass = ((headings[i].depth == searchArray[i].depth) 
+                && (headings[i].text == searchArray[i].text))
+              if (false == pass) {
+                let nb = i+1
+                why = "heading_\""+searchArray[i].text+"\"_not_found"
+                break
+              }
+            }
+          }
+          else {
+            pass = false
+            why = "nb_headings_incorrect"
+          }
+        }
 
-  //       return {
-  //         check: checkDetails.name,
-  //         kind: checkDetails.kind,
-  //         file: file,
-  //         pass: pass,
-  //         why: why,
-  //       }
-  //     },
+        return {
+          check: checkDetails.name,
+          kind: checkDetails.kind,
+          file: file,
+          pass: pass,
+          why: why,
+        }
+      },
 
   //     content_contain_json: async function(checkDetails,dataForChecks) {
 
