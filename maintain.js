@@ -8,10 +8,6 @@ module.exports = () => {
 
   console.log('Running maintain from @seneca/maintain')
 
-  console.log('Starting dir : ',process.cwd())
-  process.chdir('../')
-  console.log('Current dir : ',process.cwd())
-
   async function runChecksPrep(){
     console.log('\nrunChecksPrep function')
 
@@ -55,10 +51,6 @@ module.exports = () => {
       dataForChecks[fileName] = fileContent
     }
 
-    var dataKeys = Object.keys(dataForChecks)
-    console.log(dataKeys)
-    console.log('Package name :', dataForChecks.packageName)
-
     const relCheckList = {}
     for (const checkName in checkList) {
       let checkDetails = checkList[checkName]
@@ -67,8 +59,11 @@ module.exports = () => {
       // }
       relCheckList[checkName] = checkDetails
     }
-    var checkNames = Object.keys(relCheckList)
-    console.log(checkNames)
+    
+    return {
+      relCheckList: relCheckList,
+      dataForChecks: dataForChecks
+    }
   }
 
   async function runChecks(){}
