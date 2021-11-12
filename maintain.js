@@ -9,10 +9,7 @@ module.exports = () => {
   const checkList = require('./checks')
   const checkOps = checkOperations()
 
-  console.log('Running maintain from @seneca/maintain')
-
   async function runChecksPrep(){
-    console.log('runChecksPrep()\n')
 
     // config definition
     var argString = process.argv.slice(2)
@@ -79,7 +76,7 @@ module.exports = () => {
   }
 
   async function runChecks(){
-    console.log('runChecks()\n')
+
     let prep = await runChecksPrep()
     let relCheckList = prep.relCheckList //ok
     let dataForChecks = prep.dataForChecks //ok
@@ -113,7 +110,8 @@ module.exports = () => {
       checkDetails.name = check
       if (false == checkDetails.pass) {
         failNb++
-        let failWhy = checkDetails.check + " (why: " + checkDetails.why + ")"
+        let checkWhy = checkDetails.why
+        let failWhy = checkDetails.check + " (why: " + checkWhy.replace(/_/g," ") + ")"
         fails.push(failWhy)
       }
     }
@@ -131,17 +129,16 @@ module.exports = () => {
 
   }
 
-  // runChecksPrep()
+  // --------------------------------------------------------------------
   async function runAll() {
-    console.log("Running checks on your plugin...")
+    console.log("Running standardisation checks on your plugin...")
     let checkResults = await runChecks()
     console.log("Process complete.")
     let checkConc = await conclusion(checkResults)
     console.log(checkConc)
   }
-  
-  runAll()
-
+  // --------------------------------------------------------------------
+ 
   function checkOperations() {
 
     return {
@@ -336,5 +333,8 @@ module.exports = () => {
     }
   }
 
+  runAll()
+
 }
+
 // "undefined" is returned if test file calls a console log of module instead of calling module function directly
