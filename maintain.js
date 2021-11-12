@@ -13,6 +13,15 @@ module.exports = () => {
     process.chdir('../')
     console.log('Current dir : ',process.cwd())
 
+    // reading client's json files in
+    const jsonPromise = Filehound.create()
+      .paths(process.cwd())
+      .discard(/node_modules/,/.git/)
+      .ext('json')
+      .find();
+    const jsonFiles = await jsonPromise
+
+    // non-json files
     const stringPromise = Filehound.create()
       .paths(process.cwd())
       .discard(/node_modules/,/.git/,/.json/)
@@ -20,6 +29,20 @@ module.exports = () => {
     const stringFiles = await stringPromise
 
     let dataForChecks = {}
+
+    for (let j = 0; j < jsonFiles.length; j++) {
+      let filePath = jsonFiles[j]
+
+      let fileName = Path.basename(filePath)
+      let fileContent = require(filePath)
+
+      dataForChecks[fileName] = fileContent
+
+      //to get package and main name from package.json file
+      if ("package.json" == fileName) {
+          dataForChecks.packageName = fileContent.name
+      }
+  }
 
     for (let s = 0; s < stringFiles.length; s++) {
       let filePath = stringFiles[s]
@@ -30,7 +53,9 @@ module.exports = () => {
       dataForChecks[fileName] = fileContent
     }
 
-    console.log(dataForChecks['README.md'])
+    var dataKeys = Object.keys(dataForChecks)
+    console.log(dataKeys)
+    console.log('Package name :', dataForChecks.packageName)
 
   }
 
