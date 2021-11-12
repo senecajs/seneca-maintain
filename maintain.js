@@ -97,14 +97,50 @@ module.exports = () => {
         continue
       }
       let res = await checkKind(checkDetails,dataForChecks)
-      console.log('\n\n',res)
       results[checkName] = res
     }
     return results
   }
 
+  async function conclusion(checkResults) {
+    let totalNb = 0
+    let failNb = 0
+    let note = ""
+    let fails = []
+    for (const check in checkResults) {
+      totalNb++
+      let checkDetails = checkResults[check]
+      checkDetails.name = check
+      if (false == checkDetails.pass) {
+        failNb++
+        let failWhy = checkDetails.check + " (why: " + checkDetails.why + ")"
+        fails.push(failWhy)
+      }
+    }
+    if (0 == failNb){
+      note = "Congratulations! Your plugin meets all of the current standards."
+    }
+    else {
+      note = "Please refer to the README.md document for descriptions of all checks."
+    }
+    fails = fails.join('\n\t')
+    let message = `Total checks for this configuration: ${totalNb}
+    \nFailed checks: ${failNb}\n\t${fails}
+    \n${note}`
+    return message
+
+  }
+
   // runChecksPrep()
-  runChecks()
+  async function runAll() {
+    console.log("Running checks on your plugin...")
+    let checkResults = await runChecks()
+    console.log("Process complete.")
+    let checkConc = await conclusion(checkResults)
+    console.log(checkConc)
+  }
+  
+  runAll()
 
   function checkOperations() {
 
