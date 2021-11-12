@@ -4,6 +4,8 @@ module.exports = () => {
   const Path = require('path')
   const Fs = require('fs')
 
+  const checkList = require('./checks')
+
   console.log('Running maintain from @seneca/maintain')
 
   console.log('Starting dir : ',process.cwd())
@@ -12,8 +14,6 @@ module.exports = () => {
 
   async function runChecksPrep(){
     console.log('\nrunChecksPrep function')
-
-    
 
     // reading client's json files in
     const jsonPromise = Filehound.create()
@@ -59,7 +59,18 @@ module.exports = () => {
     console.log(dataKeys)
     console.log('Package name :', dataForChecks.packageName)
 
+    // const relCheckList = {}
+    // for (const checkName in checkList) {
+    //   let checkDetails = checkList[checkName]
+    //   if (argArray.includes(checkDetails.config)){
+    //     relCheckList[checkName] = checkDetails
+    //   }
+    // }
+    console.log(checkList)
+
   }
+
+  async function runChecks(){}
 
   runChecksPrep()
 }
