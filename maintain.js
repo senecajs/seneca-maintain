@@ -19,14 +19,18 @@ module.exports = () => {
       .find();
     const stringFiles = await stringPromise
 
+    let dataForChecks = {}
+
     for (let s = 0; s < stringFiles.length; s++) {
       let filePath = stringFiles[s]
 
       let fileName = Path.basename(filePath)
       let fileContent = Fs.readFileSync(filePath, 'utf-8')
 
-      console.log(fileName)
+      dataForChecks[fileName] = fileContent
     }
+
+    console.log(dataForChecks['README.md'])
 
   }
 
