@@ -263,15 +263,16 @@ module.exports = () => {
             && (1 == token.depth || 2 == token.depth))
 
           if (headings.length == searchArray.length) {
+            let searchFail = "";
             for (let i = 0 ; i < searchArray.length; i++) {
               pass = ((headings[i].depth == searchArray[i].depth) 
                 && (headings[i].text == searchArray[i].text))
               if (false == pass) {
                 let nb = i+1
-                why = "heading_\""+searchArray[i].text+"\"_not_found"
-                break
+                searchFail += "_\""+searchArray[i].text+"\""
               }
             }
+            why = "heading(s)"+searchFail+"_not_found"
           }
           else {
             pass = false
