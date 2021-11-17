@@ -39,15 +39,11 @@ Configurations are used to run additional checks based on the architecture of yo
 
 If your plugin is written in JavaScript, run
 
-`node <filename>.js base,js`
-
-to avail of JS-specific checks.
+`node <filename>.js base,js` to avail of JS-specific checks.
 
 If your plugin is written in TypeScript, run
 
-`node <filename>.js base,ts`
-
-to avail of the equivalent TS checks.
+`node <filename>.js base,ts` to avail of the equivalent TS checks.
 
 For the moment, these are the only three configs available.
 
