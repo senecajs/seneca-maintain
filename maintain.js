@@ -9,15 +9,17 @@ module.exports = () => {
   const checkList = require('./checks')
   const checkOps = checkOperations()
 
-  async function runChecksPrep(){
-
-    // config definition
+  async function configDef(){
     var argString = process.argv.slice(2)
     if (null == argString[0]) {
       argString[0] = "base"
     }
     const argArray = argString[0].split(',')
+    return argArray
+  }
 
+  async function runChecksPrep(config){
+    // this is a weak solution 
     // backing out of test directory
     process.chdir('../')
 
@@ -64,7 +66,7 @@ module.exports = () => {
     const relCheckList = {}
     for (const checkName in checkList) {
       let checkDetails = checkList[checkName]
-      if (argArray.includes(checkDetails.config)){
+      if (config.includes(checkDetails.config)){
         relCheckList[checkName] = checkDetails
       }
     }
@@ -75,9 +77,9 @@ module.exports = () => {
     }
   }
 
-  async function runChecks(){
+  async function runChecks(config){
 
-    let prep = await runChecksPrep()
+    let prep = await runChecksPrep(config)
     let relCheckList = prep.relCheckList //ok
     let dataForChecks = prep.dataForChecks //ok
     let results = {}
@@ -132,7 +134,9 @@ module.exports = () => {
   // --------------------------------------------------------------------
   async function runAll() {
     console.log("Running standardisation checks on your plugin...")
-    let checkResults = await runChecks()
+    let config = await configDef()
+    console.log("Configuration : ",config)
+    let checkResults = await runChecks(config)
     console.log("Process complete.")
     let checkConc = await conclusion(checkResults)
     console.log(checkConc)
