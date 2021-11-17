@@ -280,7 +280,7 @@ module.exports = () => {
           }
           else {
             pass = false
-            why = "nb_headings_incorrect"
+            why = "nb_headings_incorrect_-_"+searchArray.length+"_required,_"+headings.length+"_found"
           }
         }
 
