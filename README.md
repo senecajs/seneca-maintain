@@ -18,7 +18,8 @@ If you are new to Seneca in general, please take a look at [senecajs.org](https:
 
 ## Install
 
-`npm install @seneca/maintain`
+~~`npm install @seneca/maintain`~~
+Version 1.0 of this package is pending - the package on [NPM](https://www.npmjs.org) does not yet include the functionalities you see described here. Please wait until the release of 1.0 before installing, and check back regularly for updates.
 
 ## Quick Example
 
@@ -62,7 +63,7 @@ For the moment, these are the only three configs available.
 | __exist_license__ | Your plugin should include a license file, simply named `LICENSE` - no file extension. |
 | __exist_pkgjson__ | Your plugin should include a package.json file, at the top-level. This check simply scans for its existence. |
 | __exist_readme__ | Your plugin should contain a README.md file at the top level, named exactly `README.md`. |
-| __readme_headings__ | Your README.md file should contain only one H1-level heading (denoted by a single hash (`#`) in Markdown), the value of which should be `<package.name>`, where `<package.name>` is the name taken from the "name" value in the package.json file. Additionally, your README.md file should contain eight and only eight H2-level headings (denoted by a double-hash (`##`) in Markdown). The values of these H2 headings should be the following (order must be conserved): Install, Quick Example, More Examples, Motivation, Support, API, Contributing, Background. You may include as many lower-level headings between these as you wish. |
+| __readme_headings__ | Your README.md file should contain only one H1-level heading (denoted by a single hash (`#`) in Markdown), the value of which should be `<package.name>`, where `<package.name>` is the name taken from the "name" value in the package.json file. Additionally, your README.md file should contain eight and only eight H2-level headings (denoted by a double-hash (`##`) in Markdown). The values of these H2 headings should be the following (order must be conserved): Install, Quick Example, More Examples, Motivation, Support, API, Contributing, Background. You may include as many lower-level headings between these as you wish. This README.md document passes this check - refer to it if needed. |
 | __test_pkgjson__ | Your package.json file should include a `scripts.test` key, or a key named "test" nested within the "scripts" value. The value of this key is up to you. |
 | __version_codeconduct__ | Your CODE_OF_CONDUCT.md file should contain the latest version of Contributor Covenant's Code of Conduct, as it is [here](https://www.contributor-covenant.org/version/2/1/code_of_conduct/). |
 
