@@ -50,11 +50,11 @@ Configurations are used to run additional checks based on the architecture of yo
 
 If your plugin is written in JavaScript, run
 
-`$ seneca-maintain base,js` to avail of JS-specific checks.
+`$ seneca-maintain base,js` to include all JS-specific checks.
 
 If your plugin is written in TypeScript, run
 
-`$ seneca-maintain base,ts` to avail of the equivalent TS checks.
+`$ seneca-maintain base,ts` to include all the equivalent TS checks.
 
 For the moment, these are the only three configs available.
 

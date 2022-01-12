@@ -29,6 +29,7 @@
   "dependencies": {
     "@hapi/hoek": "^9.2.1",
     "chalk": "^5.0.0",
+    "commander": "^8.3.0",
     "filehound": "^1.17.5",
     "marked": "^4.0.9",
     "path": "^0.12.7"

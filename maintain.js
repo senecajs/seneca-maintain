@@ -5,6 +5,7 @@ module.exports = () => {
   const Fs = require('fs')
   const Hoek = require('@hapi/hoek')
   const Marked = require('marked')
+  const { Command } = require('commander')
 
   const checkList = require('./checks')
   const checkOps = checkOperations()
@@ -18,6 +19,15 @@ module.exports = () => {
     }
     const argArray = argString[0].split(',')
     return argArray
+
+    const Program = new Command()
+    Program
+      .option('-n --no-base', 'Do not run checks in base configuration.')
+      .option('-j --javascript', 'Include JavaScript-specific checks.')
+      .option('-t --typescript', 'Include TypeScript-specific checks.')
+
+    
+
   }
 
   async function runChecksPrep(config){
