@@ -2,11 +2,13 @@
   "name": "@seneca/maintain",
   "version": "0.0.2",
   "description": "Run maintenance tests for Seneca plugins.",
-  "main": "maintain.js",
+  "main": "run-maintain.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "bin": "./maintain.js",
+  "bin": {
+    "seneca-maintain": "./run-maintain.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/senecajs/seneca-maintain.git"
@@ -26,9 +28,9 @@
   "homepage": "https://github.com/senecajs/seneca-maintain#readme",
   "dependencies": {
     "@hapi/hoek": "^9.2.1",
-    "chalk": "^4.1.2",
+    "chalk": "^5.0.0",
     "filehound": "^1.17.5",
-    "marked": "^4.0.1",
+    "marked": "^4.0.9",
     "path": "^0.12.7"
   }
 }

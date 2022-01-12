@@ -9,6 +9,8 @@ module.exports = () => {
   const checkList = require('./checks')
   const checkOps = checkOperations()
 
+  // for parsing arguments
+  // this is where commander/yargs stuff would go I assume
   async function configDef(){
     var argString = process.argv.slice(2)
     if (null == argString[0]) {
@@ -19,10 +21,7 @@ module.exports = () => {
   }
 
   async function runChecksPrep(config){
-    // this is a weak solution 
-    // backing out of test directory
-    process.chdir('../')
-
+    
     // reading client's json files in
     const jsonPromise = Filehound.create()
       .paths(process.cwd())
