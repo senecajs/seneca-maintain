@@ -1,24 +1,42 @@
 module.exports = function Maintain() {
-  const Filehound = require('filehound')
+  // Node modules
   const Path = require('path')
   const Fs = require('fs')
+
+  // External modules
+  const Filehound = require('filehound')
   const Hoek = require('@hapi/hoek')
   const Marked = require('marked')
 
-  const checkList = require('./checks')
-  const checkOps = checkOperations()
+  // Internal modules
+  const { checkList } = require('./checks')
+  const defineChecks = checkOperations()
 
-  async function configDef() {
-    var argString = process.argv.slice(2)
-    if (null == argString[0]) {
-      argString[0] = 'base'
+  // Main function
+  async function runChecks(config) {
+    let prep = await runChecksPrep(config)
+    let relCheckList = prep.relCheckList
+    let dataForChecks = prep.dataForChecks
+    let results = {}
+
+    for (const checkName in relCheckList) {
+      let checkDetails = checkList[checkName]
+      checkDetails.name = checkName
+
+      let checkKind = defineChecks[checkDetails.kind]
+      // ensure check operation is detailed below
+      if (null == checkKind) {
+        console.log('WARNING', 'Check does not exist', checkName)
+        continue
+      }
+      let res = await checkKind(checkDetails, dataForChecks)
+      results[checkName] = res
     }
-    const argArray = argString[0].split(',')
-    return argArray
+    return results
   }
 
   async function runChecksPrep(config) {
-    // this is a weak solution
+    // this process has been improved in subsequent branches
     // backing out of test directory
     process.chdir('../')
 
@@ -69,34 +87,31 @@ module.exports = function Maintain() {
         relCheckList[checkName] = checkDetails
       }
     }
-    // console.log(relCheckList)
     return {
       relCheckList: relCheckList,
       dataForChecks: dataForChecks,
     }
   }
 
-  async function runChecks(config) {
-    let prep = await runChecksPrep(config)
-    let relCheckList = prep.relCheckList //ok
-    let dataForChecks = prep.dataForChecks //ok
-    let results = {}
+  runAll()
 
-    for (const checkName in relCheckList) {
-      let checkDetails = checkList[checkName] //ok
-      checkDetails.name = checkName //ok
+  async function runAll() {
+    console.log('Running standardisation checks on your plugin...')
+    let config = await configDef()
+    console.log('Configuration : ', config)
+    let checkResults = await runChecks(config)
+    console.log('Process complete.')
+    let checkConc = await conclusion(checkResults)
+    console.log(checkConc)
+  }
 
-      let checkKind = checkOps[checkDetails.kind] // now ok
-      // ensure check operation is detailed below
-      if (null == checkKind) {
-        console.log('WARNING', 'Check does not exist', checkName)
-        // proceed to next check
-        continue
-      }
-      let res = await checkKind(checkDetails, dataForChecks)
-      results[checkName] = res
+  async function configDef() {
+    let argString = process.argv.slice(2)
+    if (null == argString[0]) {
+      argString[0] = 'base'
     }
-    return results
+    const argArray = argString[0].split(',')
+    return argArray
   }
 
   async function conclusion(checkResults) {
@@ -129,16 +144,6 @@ module.exports = function Maintain() {
     return message
   }
 
-  // --------------------------------------------------------------------
-  async function runAll() {
-    console.log('Running standardisation checks on your plugin...')
-    let config = await configDef()
-    console.log('Configuration : ', config)
-    let checkResults = await runChecks(config)
-    console.log('Process complete.')
-    let checkConc = await conclusion(checkResults)
-    console.log(checkConc)
-  }
   // --------------------------------------------------------------------
 
   function checkOperations() {
@@ -176,7 +181,7 @@ module.exports = function Maintain() {
         if (true == pass) {
           const ifFileContent = dataForChecks[ifFile]
           if ('key' == containsType) {
-            var searchIs = Hoek.reach(ifFileContent, searchContent)
+            let searchIs = Hoek.reach(ifFileContent, searchContent)
             pass = null != searchIs && searchIsNot != searchIs
           } else {
             // add in "else if" clause if searching for json value
@@ -305,11 +310,6 @@ module.exports = function Maintain() {
         if (true == pass) {
           const fileContent = dataForChecks[file]
           if ('key' == containsType) {
-            // clean this up
-            // let chain = []
-            // for (let i = 0; i < searchContent.length; i++) {
-            //     chain.push(searchContent[i])
-            // }
             pass = null != Hoek.reach(fileContent, searchContent)
           } else {
             // add in "else if" clause if searching for json value
@@ -334,8 +334,4 @@ module.exports = function Maintain() {
       },
     }
   }
-
-  runAll()
 }
-
-// "undefined" is returned if test file calls a console log of module instead of calling module function directly
