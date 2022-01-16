@@ -1,5 +1,4 @@
-module.exports = () => {
-
+module.exports = function Maintain() {
   const Filehound = require('filehound')
   const Path = require('path')
   const Fs = require('fs')
@@ -9,33 +8,33 @@ module.exports = () => {
   const checkList = require('./checks')
   const checkOps = checkOperations()
 
-  async function configDef(){
+  async function configDef() {
     var argString = process.argv.slice(2)
     if (null == argString[0]) {
-      argString[0] = "base"
+      argString[0] = 'base'
     }
     const argArray = argString[0].split(',')
     return argArray
   }
 
-  async function runChecksPrep(config){
-    // this is a weak solution 
+  async function runChecksPrep(config) {
+    // this is a weak solution
     // backing out of test directory
     process.chdir('../')
 
     // reading client's json files in
     const jsonPromise = Filehound.create()
       .paths(process.cwd())
-      .discard(/node_modules/,/.git/)
+      .discard(/node_modules/, /.git/)
       .ext('json')
-      .find();
+      .find()
     const jsonFiles = await jsonPromise
 
     // non-json files
     const stringPromise = Filehound.create()
       .paths(process.cwd())
-      .discard(/node_modules/,/.git/,/.json/)
-      .find();
+      .discard(/node_modules/, /.git/, /.json/)
+      .find()
     const stringFiles = await stringPromise
 
     let dataForChecks = {}
@@ -49,10 +48,10 @@ module.exports = () => {
       dataForChecks[fileName] = fileContent
 
       //to get package and main name from package.json file
-      if ("package.json" == fileName) {
-          dataForChecks.packageName = fileContent.name
+      if ('package.json' == fileName) {
+        dataForChecks.packageName = fileContent.name
       }
-  }
+    }
 
     for (let s = 0; s < stringFiles.length; s++) {
       let filePath = stringFiles[s]
@@ -66,36 +65,35 @@ module.exports = () => {
     const relCheckList = {}
     for (const checkName in checkList) {
       let checkDetails = checkList[checkName]
-      if (config.includes(checkDetails.config)){
+      if (config.includes(checkDetails.config)) {
         relCheckList[checkName] = checkDetails
       }
     }
     // console.log(relCheckList)
     return {
       relCheckList: relCheckList,
-      dataForChecks: dataForChecks
+      dataForChecks: dataForChecks,
     }
   }
 
-  async function runChecks(config){
-
+  async function runChecks(config) {
     let prep = await runChecksPrep(config)
     let relCheckList = prep.relCheckList //ok
     let dataForChecks = prep.dataForChecks //ok
     let results = {}
 
-    for(const checkName in relCheckList) {
-      let checkDetails = checkList[checkName] //ok 
+    for (const checkName in relCheckList) {
+      let checkDetails = checkList[checkName] //ok
       checkDetails.name = checkName //ok
 
       let checkKind = checkOps[checkDetails.kind] // now ok
       // ensure check operation is detailed below
-      if(null == checkKind) {
-        console.log('WARNING','Check does not exist', checkName)
+      if (null == checkKind) {
+        console.log('WARNING', 'Check does not exist', checkName)
         // proceed to next check
         continue
       }
-      let res = await checkKind(checkDetails,dataForChecks)
+      let res = await checkKind(checkDetails, dataForChecks)
       results[checkName] = res
     }
     return results
@@ -104,7 +102,7 @@ module.exports = () => {
   async function conclusion(checkResults) {
     let totalNb = 0
     let failNb = 0
-    let note = ""
+    let note = ''
     let fails = []
     for (const check in checkResults) {
       totalNb++
@@ -113,45 +111,44 @@ module.exports = () => {
       if (false == checkDetails.pass) {
         failNb++
         let checkWhy = checkDetails.why
-        let failWhy = checkDetails.check + " (why: " + checkWhy.replace(/_/g," ") + ")"
+        let failWhy =
+          checkDetails.check + ' (why: ' + checkWhy.replace(/_/g, ' ') + ')'
         fails.push(failWhy)
       }
     }
-    if (0 == failNb){
-      note = "Congratulations! Your plugin meets all of the current standards."
-    }
-    else {
-      note = "Please refer to the README.md document for descriptions of all checks."
+    if (0 == failNb) {
+      note = 'Congratulations! Your plugin meets all of the current standards.'
+    } else {
+      note =
+        'Please refer to the README.md document for descriptions of all checks.'
     }
     fails = fails.join('\n\t')
     let message = `Total checks for this configuration: ${totalNb}
     \nFailed checks: ${failNb}\n\t${fails}
     \n${note}`
     return message
-
   }
 
   // --------------------------------------------------------------------
   async function runAll() {
-    console.log("Running standardisation checks on your plugin...")
+    console.log('Running standardisation checks on your plugin...')
     let config = await configDef()
-    console.log("Configuration : ",config)
+    console.log('Configuration : ', config)
     let checkResults = await runChecks(config)
-    console.log("Process complete.")
+    console.log('Process complete.')
     let checkConc = await conclusion(checkResults)
     console.log(checkConc)
   }
   // --------------------------------------------------------------------
- 
-  function checkOperations() {
 
+  function checkOperations() {
     return {
-      file_exist: async function(checkDetails,dataForChecks) {
+      file_exist: async function (checkDetails, dataForChecks) {
         let file = checkDetails.file
         let pass = file in dataForChecks
-        let why = "file_not_found"
-        if (true == pass){
-          why = "file_found"
+        let why = 'file_not_found'
+        if (true == pass) {
+          why = 'file_found'
         }
 
         return {
@@ -163,12 +160,14 @@ module.exports = () => {
         }
       },
 
-      fileX_exist_if_contain_json: async function(checkDetails,dataForChecks) {
-
+      fileX_exist_if_contain_json: async function (
+        checkDetails,
+        dataForChecks
+      ) {
         let file = checkDetails.file
         let ifFile = checkDetails.if_file
         let pass = ifFile in dataForChecks
-        let why = "json_file_not_found"
+        let why = 'json_file_not_found'
         let searchContent = checkDetails.contains
         let searchIsNot = checkDetails.contains_is_not
         let containsType = checkDetails.contains_type
@@ -176,36 +175,33 @@ module.exports = () => {
 
         if (true == pass) {
           const ifFileContent = dataForChecks[ifFile]
-          if ("key" == containsType) {
-            var searchIs = Hoek.reach(ifFileContent,searchContent)
-            pass = (null != searchIs && searchIsNot != searchIs)
-
-          }
-          else { // add in "else if" clause if searching for json value
-            console.log("Content type not recognised.")
+          if ('key' == containsType) {
+            var searchIs = Hoek.reach(ifFileContent, searchContent)
+            pass = null != searchIs && searchIsNot != searchIs
+          } else {
+            // add in "else if" clause if searching for json value
+            console.log('Content type not recognised.')
             pass = false
           }
 
           if (true == pass) {
-            if ("js" == config) {
+            if ('js' == config) {
               file = searchIs
               pass = file in dataForChecks
             }
-            if ("ts" == config) {
-              file = Path.basename(searchIs,'.js')+'.ts'
+            if ('ts' == config) {
+              file = Path.basename(searchIs, '.js') + '.ts'
               pass = file in dataForChecks
             }
 
             if (true == pass) {
-              why = "file_found"
+              why = 'file_found'
+            } else {
+              why = 'file_not_found'
             }
-            else {
-              why = "file_not_found"
-            }
+          } else {
+            why = 'incorrect_value'
           }
-          else {
-            why = "incorrect_value"
-          } 
         }
 
         return {
@@ -217,12 +213,11 @@ module.exports = () => {
         }
       },
 
-      content_contain_string: async function(checkDetails,dataForChecks) {
-
+      content_contain_string: async function (checkDetails, dataForChecks) {
         let file = checkDetails.file
         let pass = file in dataForChecks
         let searchContent = checkDetails.contains
-        let why = "file_not_found"
+        let why = 'file_not_found'
 
         if (true == pass) {
           const fileContent = dataForChecks[file]
@@ -230,12 +225,11 @@ module.exports = () => {
           for (let i = 0; i < searchContent.length; i++) {
             pass = fileContent.includes(searchContent[i])
           }
-          
+
           if (true == pass) {
-            why = "content_found"
-          }
-          else {
-            why = "content_not_found"
+            why = 'content_found'
+          } else {
+            why = 'content_not_found'
           }
         }
 
@@ -248,12 +242,12 @@ module.exports = () => {
         }
       },
 
-      content_contain_markdown: async function(checkDetails,dataForChecks) {
+      content_contain_markdown: async function (checkDetails, dataForChecks) {
         let file = checkDetails.file
         let pass = file in dataForChecks
-        let why = "file_not_found"
-        if (true == pass){
-          why = "file_found"
+        let why = 'file_not_found'
+        if (true == pass) {
+          why = 'file_found'
 
           let searchArray = checkDetails.contains
           // Reassignment of #1 heading text
@@ -263,24 +257,31 @@ module.exports = () => {
           // Creating AST from file
           const lexer = new Marked.Lexer()
           const tokens = lexer.lex(fileContent)
-          const headings = tokens.filter(token => "heading" == token.type 
-            && (1 == token.depth || 2 == token.depth))
+          const headings = tokens.filter(
+            (token) =>
+              'heading' == token.type && (1 == token.depth || 2 == token.depth)
+          )
 
           if (headings.length == searchArray.length) {
-            let searchFail = "";
-            for (let i = 0 ; i < searchArray.length; i++) {
-              pass = ((headings[i].depth == searchArray[i].depth) 
-                && (headings[i].text == searchArray[i].text))
+            let searchFail = ''
+            for (let i = 0; i < searchArray.length; i++) {
+              pass =
+                headings[i].depth == searchArray[i].depth &&
+                headings[i].text == searchArray[i].text
               if (false == pass) {
-                let nb = i+1
-                searchFail += "_\""+searchArray[i].text+"\""
+                let nb = i + 1
+                searchFail += '_"' + searchArray[i].text + '"'
               }
             }
-            why = "heading(s)"+searchFail+"_not_found"
-          }
-          else {
+            why = 'heading(s)' + searchFail + '_not_found'
+          } else {
             pass = false
-            why = "nb_headings_incorrect_-_"+searchArray.length+"_required,_"+headings.length+"_found"
+            why =
+              'nb_headings_incorrect_-_' +
+              searchArray.length +
+              '_required,_' +
+              headings.length +
+              '_found'
           }
         }
 
@@ -293,36 +294,33 @@ module.exports = () => {
         }
       },
 
-      content_contain_json: async function(checkDetails,dataForChecks) {
-
+      content_contain_json: async function (checkDetails, dataForChecks) {
         let file = checkDetails.file
         let pass = file in dataForChecks
         let searchContent = checkDetails.contains
         let containsType = checkDetails.contains_type
         // let searchLevels = Object.values(searchContent)
-        let why = "file_not_found"
+        let why = 'file_not_found'
 
         if (true == pass) {
           const fileContent = dataForChecks[file]
-          if ("key" == containsType) {
+          if ('key' == containsType) {
             // clean this up
             // let chain = []
             // for (let i = 0; i < searchContent.length; i++) {
             //     chain.push(searchContent[i])
             // }
-            pass = (null != (Hoek.reach(fileContent,searchContent)))
-
-          }
-          else { // add in "else if" clause if searching for json value
-            console.log("Content type not recognised.")
+            pass = null != Hoek.reach(fileContent, searchContent)
+          } else {
+            // add in "else if" clause if searching for json value
+            console.log('Content type not recognised.')
             pass = false
           }
-          
+
           if (true == pass) {
-            why = "content_found"
-          }
-          else {
-            why = "content_not_found"
+            why = 'content_found'
+          } else {
+            why = 'content_not_found'
           }
         }
 
@@ -334,12 +332,10 @@ module.exports = () => {
           why: why,
         }
       },
-
     }
   }
 
   runAll()
-
 }
 
 // "undefined" is returned if test file calls a console log of module instead of calling module function directly
