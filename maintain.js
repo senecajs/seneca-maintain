@@ -7,6 +7,7 @@ module.exports = function Maintain() {
   const Filehound = require('filehound')
   const Hoek = require('@hapi/hoek')
   const Marked = require('marked')
+  const { Command } = require('commander')
 
   // Internal modules
   const { checkList } = require('./checks')
@@ -36,10 +37,6 @@ module.exports = function Maintain() {
   }
 
   async function runChecksPrep(config) {
-    // this process has been improved in subsequent branches
-    // backing out of test directory
-    process.chdir('../')
-
     // reading client's json files in
     const jsonPromise = Filehound.create()
       .paths(process.cwd())
@@ -106,12 +103,17 @@ module.exports = function Maintain() {
   }
 
   async function configDef() {
-    let argString = process.argv.slice(2)
+    var argString = process.argv.slice(2)
     if (null == argString[0]) {
       argString[0] = 'base'
     }
     const argArray = argString[0].split(',')
     return argArray
+
+    const Program = new Command()
+    Program.option('-n --no-base', 'Do not run checks in base configuration.')
+      .option('-j --javascript', 'Include JavaScript-specific checks.')
+      .option('-t --typescript', 'Include TypeScript-specific checks.')
   }
 
   async function conclusion(checkResults) {

@@ -24,15 +24,24 @@ Version 1.0 of this package is pending - the package on [NPM](https://www.npmjs.
 
 ## Quick Example
 
-```javascript
-const Maintain = require('@seneca/maintain')
-
-Maintain()
+```bash
+$ seneca-maintain
 ```
 
-Currently, the above script must be placed in a file in a sub-directory in order to function correctly - we recommend `test/maintain.test.js` if you wish to use [Jest](https://jestjs.io/).
+Run the above command from the directory of the plugin you wish to test. Below is a sample of the result you may recieve, in this case with two failed checks.
 
-Run the module _from the test directory_ with the `node <filename>` command.
+```txt
+Running standardisation checks on your plugin...
+Configuration :  [ 'base' ]
+Process complete.
+Total checks for this configuration: 8
+
+Failed checks: 2
+    exist_codeconduct (why: file not found)
+    version_codeconduct (why: file not found)
+
+Please refer to the README.md document for descriptions of all checks.
+```
 
 ## More Examples
 
@@ -42,11 +51,11 @@ Configurations are used to run additional checks based on the architecture of yo
 
 If your plugin is written in JavaScript, run
 
-`node <filename>.js base,js` to avail of JS-specific checks.
+`$ seneca-maintain base,js` to include all JS-specific checks.
 
 If your plugin is written in TypeScript, run
 
-`node <filename>.js base,ts` to avail of the equivalent TS checks.
+`$ seneca-maintain base,ts` to include all the equivalent TS checks.
 
 For the moment, these are the only three configs available.
 
@@ -67,7 +76,7 @@ For the moment, these are the only three configs available.
 | **exist_readme**        | Your plugin should contain a README.md file at the top level, named exactly `README.md`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | **readme_headings**     | Your README.md file should contain only one H1-level heading (denoted by a single hash (`#`) in Markdown), the value of which should be `<package.name>`, where `<package.name>` is the name taken from the "name" value in the package.json file. Additionally, your README.md file should contain eight and only eight H2-level headings (denoted by a double-hash (`##`) in Markdown). The values of these H2 headings should be the following (order must be conserved): Install, Quick Example, More Examples, Motivation, Support, API, Contributing, Background. You may include as many lower-level headings between these as you wish. This README.md document passes this check - refer to it if needed. |
 | **test_pkgjson**        | Your package.json file should include a `scripts.test` key, or a key named "test" nested within the "scripts" value. The value of this key is up to you.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| **version_codeconduct** | Your CODE_OF_CONDUCT.md file should contain the latest version of Contributor Covenant's Code of Conduct, as it is [here](https://www.contributor-covenant.org/version/2/1/code_of_conduct/).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| **version_codeconduct** | Your CODE_OF_CONDUCT.md file should contain the latest version of Contributor Covenant's Code of Conduct, as denoted [here](https://www.contributor-covenant.org/version/2/1/code_of_conduct/).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 
 ## API
 
