@@ -1,3 +1,5 @@
+const { Console } = require('console')
+
 module.exports = function Maintain() {
   // Node modules
   const Path = require('path')
