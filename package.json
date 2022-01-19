@@ -4,7 +4,7 @@
   "description": "Run maintenance tests for Seneca plugins.",
   "main": "run-maintain.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "prettier": "prettier --write *.js lib/*.js test/*.js"
   },
   "bin": {
@@ -36,6 +36,7 @@
     "path": "^0.12.7"
   },
   "devDependencies": {
+    "jest": "^27.4.7",
     "prettier": "^2.5.1"
   }
 }
