@@ -4,7 +4,9 @@
   "description": "Run maintenance tests for Seneca plugins.",
   "main": "run-maintain.js",
   "scripts": {
-    "test": "jest",
+    "test": "echo no-test",
+    "clean": "rm -rf node_modules package-lock.json yarn.lock",
+    "reset": "npm run clean && npm install && npm run test",
     "prettier": "prettier --write *.js lib/*.js test/*.js"
   },
   "bin": {
