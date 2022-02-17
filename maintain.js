@@ -47,7 +47,7 @@ module.exports = {
           resultsLog.push('\n' + res.check + ' failed (' + res.why + ')')
         }
       }
-      if (throwChecks) {
+      if (throwChecks && 0 < resultsLog.length) {
         throw new Error('Failed Checks:\n' + resultsLog)
       } else {
         return results
