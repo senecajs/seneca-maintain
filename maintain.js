@@ -1,6 +1,5 @@
 module.exports = {
   Maintain: function () {
-    console.log('9999')
     // Node modules
     const Path = require('path')
     const Fs = require('fs')
@@ -9,15 +8,14 @@ module.exports = {
     const Filehound = require('filehound')
     const Hoek = require('@hapi/hoek')
     const Marked = require('marked')
-    const { Command } = require('commander')
 
     // Internal modules
     const { checkList } = require('./checks')
     const defineChecks = checkOperations()
 
     // Main function
-    async function runChecks(config) {
-      let prep = await runChecksPrep(config)
+    async function runChecks() {
+      let prep = await runChecksPrep()
       let relCheckList = prep.relCheckList
       let dataForChecks = prep.dataForChecks
       let results = {}
@@ -38,7 +36,7 @@ module.exports = {
       return results
     }
 
-    async function runChecksPrep(config) {
+    async function runChecksPrep() {
       // reading client's json files in
       const jsonPromise = Filehound.create()
         .paths(process.cwd())
@@ -70,14 +68,26 @@ module.exports = {
         }
       }
 
+      // For config def
+      let fileExts = []
+
       for (let s = 0; s < stringFiles.length; s++) {
         let filePath = stringFiles[s]
 
         let fileName = Path.basename(filePath)
+        fileExts.push(Path.extname(fileName))
         let fileContent = Fs.readFileSync(filePath, 'utf-8')
 
         dataForChecks[fileName] = fileContent
       }
+
+      let config = ['base']
+      if (fileExts.includes('.ts')) {
+        config.push('ts')
+      } else if (fileExts.includes('.js')) {
+        config.push('js')
+      }
+      console.log(config)
 
       const relCheckList = {}
       for (const checkName in checkList) {
@@ -96,26 +106,10 @@ module.exports = {
 
     async function runAll() {
       console.log('Running standardisation checks on your plugin...')
-      let config = await configDef()
-      console.log('Configuration : ', config)
-      let checkResults = await runChecks(config)
+      let checkResults = await runChecks()
       console.log('Process complete.')
       let checkConc = await conclusion(checkResults)
       console.log(checkConc)
-    }
-
-    async function configDef() {
-      var argString = process.argv.slice(2)
-      if (null == argString[0]) {
-        argString[0] = 'base'
-      }
-      const argArray = argString[0].split(',')
-      return argArray
-
-      const Program = new Command()
-      Program.option('-n --no-base', 'Do not run checks in base configuration.')
-        .option('-j --javascript', 'Include JavaScript-specific checks.')
-        .option('-t --typescript', 'Include TypeScript-specific checks.')
     }
 
     async function conclusion(checkResults) {
@@ -328,6 +322,25 @@ module.exports = {
             } else {
               why = 'content_not_found'
             }
+          }
+
+          return {
+            check: checkDetails.name,
+            kind: checkDetails.kind,
+            file: file,
+            pass: pass,
+            why: why,
+          }
+        },
+
+        check_branch: async function (checkDetails, pluginData) {
+          let branch = checkDetails.branch
+          let pass = branch == pluginData.default_branch
+          let why = 'branch_incorrect'
+          let file = 'N/A'
+
+          if (pass) {
+            why = 'branch_correct'
           }
 
           return {

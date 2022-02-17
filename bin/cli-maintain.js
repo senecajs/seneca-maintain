@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-const {
-  Maintain: { test1, test2 },
-} = require('../exportsMaintain')
+const { Maintain } = require('../maintain')
 
-test1()
+Maintain()
