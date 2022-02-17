@@ -15,6 +15,7 @@ module.exports = {
 
     // Main function
     return runChecks()
+
     async function runChecks() {
       let prep = await runChecksPrep()
       if (null == prep)
@@ -24,6 +25,7 @@ module.exports = {
       let relCheckList = prep.relCheckList
       let dataForChecks = prep.dataForChecks
       let results = {}
+      let resultsLog = []
 
       for (const checkName in relCheckList) {
         let checkDetails = checkList[checkName]
@@ -41,18 +43,15 @@ module.exports = {
               ' - return obj is undefined'
           )
         results[checkName] = res
-        if (throwChecks) {
-          if (false == res.pass) {
-            throw new Error(
-              'The ' +
-                res.check +
-                ' check has failed due to the following reason: ' +
-                res.why
-            )
-          }
+        if (false == res.pass) {
+          resultsLog.push('\n' + res.check + ' failed (' + res.why + ')')
         }
       }
-      return results
+      if (throwChecks) {
+        throw new Error('Failed Checks:\n' + resultsLog)
+      } else {
+        return results
+      }
     }
 
     async function runChecksPrep() {
