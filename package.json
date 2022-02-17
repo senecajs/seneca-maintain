@@ -8,7 +8,8 @@
     "prettier": "prettier --write *.js lib/*.js test/*.js"
   },
   "bin": {
-    "seneca-maintain": "./run-maintain.js"
+    "cli-maintain": "./bin/cli-maintain.js",
+    "seneca-maintain": "./maintain.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,7 @@
   ],
   "author": "Ríona Stokes https://github.com/stokesriona",
   "contributors": [
+    "Ríona Stokes https://github.com/stokesriona",
     "Richard Rodger https://github.com/rjrodger"
   ],
   "license": "MIT",

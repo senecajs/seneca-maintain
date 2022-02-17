@@ -1,6 +1,6 @@
 module.exports = {
   Maintain: function () {
-    console.log('MAINTAIN')
+    console.log('9999')
     // Node modules
     const Path = require('path')
     const Fs = require('fs')
