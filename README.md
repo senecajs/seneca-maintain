@@ -25,15 +25,12 @@ Version 1.0 of this package is pending - the package on [NPM](https://www.npmjs.
 ## Quick Example
 
 ```bash
-$ seneca-maintain
+$ cli-maintain
 ```
 
 Run the above command from the directory of the plugin you wish to test. Below is a sample of the result you may recieve, in this case with two failed checks.
 
 ```txt
-Running standardisation checks on your plugin...
-Configuration :  [ 'base' ]
-Process complete.
 Total checks for this configuration: 8
 
 Failed checks: 2
@@ -41,27 +38,20 @@ Failed checks: 2
     version_codeconduct (why: file not found)
 
 Please refer to the README.md document for descriptions of all checks.
+https://github.com/senecajs/seneca-maintain/blob/main/README.md
 ```
 
 ## More Examples
 
-**Using configurations**
+### Configurations
 
-Configurations are used to run additional checks based on the architecture of your specific plugin. By default, if no arguments are specified, the base configuration is used.
-
-If your plugin is written in JavaScript, run
-
-`$ seneca-maintain base,js` to include all JS-specific checks.
-
-If your plugin is written in TypeScript, run
-
-`$ seneca-maintain base,ts` to include all the equivalent TS checks.
-
-For the moment, these are the only three configs available.
+Configurations are used to run additional checks based on the architecture of your specific plugin. At the moment, we have three configs - Base, JavaScript, and TypeScript. The base configuration is run by default, and the tool will apply language specific configurations based on the language of each plugin. No action on your part is necessary.
 
 ## Motivation
 
 ## Support
+
+Check out our sponsors and supporters, Voxgig, on their website [here](https://www.voxgig.com).
 
 ### Check Descriptions
 
@@ -76,10 +66,24 @@ For the moment, these are the only three configs available.
 | **exist_readme**        | Your plugin should contain a README.md file at the top level, named exactly `README.md`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | **readme_headings**     | Your README.md file should contain only one H1-level heading (denoted by a single hash (`#`) in Markdown), the value of which should be `<package.name>`, where `<package.name>` is the name taken from the "name" value in the package.json file. Additionally, your README.md file should contain eight and only eight H2-level headings (denoted by a double-hash (`##`) in Markdown). The values of these H2 headings should be the following (order must be conserved): Install, Quick Example, More Examples, Motivation, Support, API, Contributing, Background. You may include as many lower-level headings between these as you wish. This README.md document passes this check - refer to it if needed. |
 | **test_pkgjson**        | Your package.json file should include a `scripts.test` key, or a key named "test" nested within the "scripts" value. The value of this key is up to you.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| **check_default**       | Your default branch should be named `main`, and not `master`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | **version_codeconduct** | Your CODE_OF_CONDUCT.md file should contain the latest version of Contributor Covenant's Code of Conduct, as denoted [here](https://www.contributor-covenant.org/version/2/1/code_of_conduct/).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 
 ## API
 
+No API functionality is currently shipped with this tool.
+
 ## Contributing
 
+The [SenecaJS org](http://senecajs.org/) encourages participation. If you feel you can help in any way, be
+it with bug reporting, documentation, examples, extra testing, or new features, feel free
+to [create an issue](https://github.com/senecajs/seneca-maintain/issues/new), or better yet - [submit a Pull Request](https://github.com/senecajs/seneca-maintain/pulls). For more
+information on contribution, please see our [Contributing Guide](http://senecajs.org/contribute).
+
 ## Background
+
+Check out the SenecaJS roadmap [here](https://senecajs.org/roadmap/)!
+
+### License
+
+Licensed under [MIT](./LICENSE).

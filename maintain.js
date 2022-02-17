@@ -1,5 +1,5 @@
 module.exports = {
-  Maintain: function () {
+  Maintain: function (throwChecks = true) {
     // Node modules
     const Path = require('path')
     const Fs = require('fs')
@@ -14,8 +14,13 @@ module.exports = {
     const defineChecks = checkOperations()
 
     // Main function
+    return runChecks()
     async function runChecks() {
       let prep = await runChecksPrep()
+      if (null == prep)
+        throw new Error(
+          'Issue with preparation function runChecksPrep() - returns undefined.'
+        )
       let relCheckList = prep.relCheckList
       let dataForChecks = prep.dataForChecks
       let results = {}
@@ -25,13 +30,27 @@ module.exports = {
         checkDetails.name = checkName
 
         let checkKind = defineChecks[checkDetails.kind]
-        // ensure check operation is detailed below
-        if (null == checkKind) {
-          console.log('WARNING', 'Check does not exist', checkName)
-          continue
-        }
+        if (null == checkKind)
+          throw new Error('Check operation is not defined in script.')
+
         let res = await checkKind(checkDetails, dataForChecks)
+        if (null == res)
+          throw new Error(
+            'Problem with running check ' +
+              checkDetails.name +
+              ' - return obj is undefined'
+          )
         results[checkName] = res
+        if (throwChecks) {
+          if (false == res.pass) {
+            throw new Error(
+              'The ' +
+                res.check +
+                ' check has failed due to the following reason: ' +
+                res.why
+            )
+          }
+        }
       }
       return results
     }
@@ -44,6 +63,8 @@ module.exports = {
         .ext('json')
         .find()
       const jsonFiles = await jsonPromise
+      if (null == jsonFiles)
+        throw new Error('Local JSON files not found correctly')
 
       // non-json files
       const stringPromise = Filehound.create()
@@ -51,6 +72,8 @@ module.exports = {
         .discard(/node_modules/, /.git/, /.json/)
         .find()
       const stringFiles = await stringPromise
+      if (null == stringFiles)
+        throw new Error('Local files (excl JSON) not found correctly')
 
       let dataForChecks = {}
 
@@ -59,6 +82,8 @@ module.exports = {
 
         let fileName = Path.basename(filePath)
         let fileContent = require(filePath)
+        if (null == fileContent)
+          throw new Error('Problem reading ' + filename + ' file')
 
         dataForChecks[fileName] = fileContent
 
@@ -77,6 +102,8 @@ module.exports = {
         let fileName = Path.basename(filePath)
         fileExts.push(Path.extname(fileName))
         let fileContent = Fs.readFileSync(filePath, 'utf-8')
+        if (null == fileContent)
+          throw new Error('Problem reading ' + filename + ' file')
 
         dataForChecks[fileName] = fileContent
       }
@@ -87,7 +114,6 @@ module.exports = {
       } else if (fileExts.includes('.js')) {
         config.push('js')
       }
-      console.log(config)
 
       const relCheckList = {}
       for (const checkName in checkList) {
@@ -100,47 +126,6 @@ module.exports = {
         relCheckList: relCheckList,
         dataForChecks: dataForChecks,
       }
-    }
-
-    runAll()
-
-    async function runAll() {
-      console.log('Running standardisation checks on your plugin...')
-      let checkResults = await runChecks()
-      console.log('Process complete.')
-      let checkConc = await conclusion(checkResults)
-      console.log(checkConc)
-    }
-
-    async function conclusion(checkResults) {
-      let totalNb = 0
-      let failNb = 0
-      let note = ''
-      let fails = []
-      for (const check in checkResults) {
-        totalNb++
-        let checkDetails = checkResults[check]
-        checkDetails.name = check
-        if (false == checkDetails.pass) {
-          failNb++
-          let checkWhy = checkDetails.why
-          let failWhy =
-            checkDetails.check + ' (why: ' + checkWhy.replace(/_/g, ' ') + ')'
-          fails.push(failWhy)
-        }
-      }
-      if (0 == failNb) {
-        note =
-          'Congratulations! Your plugin meets all of the current standards.'
-      } else {
-        note =
-          'Please refer to the README.md document for descriptions of all checks.'
-      }
-      fails = fails.join('\n\t')
-      let message = `Total checks for this configuration: ${totalNb}
-    \nFailed checks: ${failNb}\n\t${fails}
-    \n${note}`
-      return message
     }
 
     // --------------------------------------------------------------------
@@ -184,7 +169,6 @@ module.exports = {
               pass = null != searchIs && searchIsNot != searchIs
             } else {
               // add in "else if" clause if searching for json value
-              console.log('Content type not recognised.')
               pass = false
             }
 
@@ -313,7 +297,6 @@ module.exports = {
               pass = null != Hoek.reach(fileContent, searchContent)
             } else {
               // add in "else if" clause if searching for json value
-              console.log('Content type not recognised.')
               pass = false
             }
 
