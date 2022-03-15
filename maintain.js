@@ -3,6 +3,7 @@ module.exports = {
     // Node modules
     const Path = require('path')
     const Fs = require('fs')
+    const { exec } = require('child_process')
 
     // External modules
     const Filehound = require('filehound')
@@ -71,6 +72,8 @@ module.exports = {
         .discard(/node_modules/, /.git/, /.json/)
         .find()
       const stringFiles = await stringPromise
+      // add git config file to file list (for default branch check)
+      stringFiles.push(process.cwd() + '/.git/config')
       if (null == stringFiles)
         throw new Error('Local files (excl JSON) not found correctly')
 
@@ -106,6 +109,10 @@ module.exports = {
 
         dataForChecks[fileName] = fileContent
       }
+
+      // getting default branch name
+      // git remote show REMOTE_REPO_NAME | grep 'HEAD branch' | cut -d' ' -f5
+      // exec("git remote show origin | grep 'HEAD branch' | cut -d' ' -f5")
 
       let config = ['base']
       if (fileExts.includes('.ts')) {
@@ -315,14 +322,22 @@ module.exports = {
           }
         },
 
-        check_branch: async function (checkDetails, pluginData) {
+        check_branch: async function (checkDetails, dataForChecks) {
+          let file = checkDetails.file
+          let pass = file in dataForChecks
           let branch = checkDetails.branch
-          let pass = branch == pluginData.default_branch
-          let why = 'branch_incorrect'
-          let file = 'N/A'
+          let why = 'file_not_found'
 
-          if (pass) {
-            why = 'branch_correct'
+          if (true == pass) {
+            const fileContent = dataForChecks[file]
+
+            pass = fileContent.includes(branch)
+
+            if (true == pass) {
+              why = 'content_found'
+            } else {
+              why = 'content_not_found'
+            }
           }
 
           return {

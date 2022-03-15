@@ -79,6 +79,7 @@ module.exports = {
     check_default: {
       config: 'base',
       kind: 'check_branch',
+      file: 'config',
       branch: 'main',
     },
 
