@@ -1,5 +1,12 @@
 module.exports = {
   checkList: {
+    check_default: {
+      config: 'base',
+      kind: 'check_branch',
+      file: 'config',
+      branch: 'main',
+    },
+
     content_readme: {
       config: 'base',
       kind: 'content_contain_string',
@@ -74,13 +81,6 @@ module.exports = {
       file: 'package.json',
       contains: ['scripts', 'test'],
       contains_type: 'key',
-    },
-
-    check_default: {
-      config: 'base',
-      kind: 'check_branch',
-      file: 'config',
-      branch: 'main',
     },
 
     version_codeconduct: {
