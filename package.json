@@ -1,6 +1,6 @@
 {
   "name": "@seneca/maintain",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Run maintenance tests for Seneca plugins.",
   "main": "./maintain.js",
   "scripts": {
@@ -10,8 +10,7 @@
     "prettier": "prettier --write *.js lib/*.js test/*.js"
   },
   "bin": {
-    "cli-maintain": "./bin/cli-maintain.js",
-    "seneca-maintain": "./maintain.js"
+    "cli-maintain": "./bin/cli-maintain.js"
   },
   "repository": {
     "type": "git",
@@ -33,9 +32,6 @@
   "homepage": "https://github.com/senecajs/seneca-maintain#readme",
   "dependencies": {
     "@hapi/hoek": "^9.2.1",
-    "chalk": "^5.0.0",
-    "commander": "^9.0.0",
-    "extra-git": "^1.1.6",
     "filehound": "^1.17.5",
     "marked": "^4.0.12",
     "path": "^0.12.7"
