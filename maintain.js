@@ -3,7 +3,6 @@ module.exports = {
     // Node modules
     const Path = require('path')
     const Fs = require('fs')
-    const { exec } = require('child_process')
 
     // External modules
     const Filehound = require('filehound')
