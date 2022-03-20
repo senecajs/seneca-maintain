@@ -1,8 +1,8 @@
 {
   "name": "@seneca/maintain",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Run maintenance tests for Seneca plugins.",
-  "main": "run-maintain.js",
+  "main": "./maintain.js",
   "scripts": {
     "test": "echo no-test",
     "clean": "rm -rf node_modules package-lock.json yarn.lock",
@@ -35,12 +35,12 @@
     "@hapi/hoek": "^9.2.1",
     "chalk": "^5.0.0",
     "commander": "^9.0.0",
+    "extra-git": "^1.1.6",
     "filehound": "^1.17.5",
     "marked": "^4.0.12",
     "path": "^0.12.7"
   },
   "devDependencies": {
-    "jest": "^27.5.1",
     "prettier": "^2.5.1"
   }
 }
