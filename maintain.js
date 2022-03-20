@@ -21,7 +21,7 @@ module.exports = {
       let prep = await runChecksPrep()
       if (null == prep)
         throw new Error(
-          'Issue with preparation function runChecksPrep() - returns undefined.'
+          'Issue with preparation function runChecksPrep() - returns undefined.\n'
         )
       let relCheckList = prep.relCheckList
       let dataForChecks = prep.dataForChecks
@@ -34,14 +34,14 @@ module.exports = {
 
         let checkKind = defineChecks[checkDetails.kind]
         if (null == checkKind)
-          throw new Error('Check operation is not defined in script.')
+          throw new Error('Check operation is not defined in script.\n')
 
         let res = await checkKind(checkDetails, dataForChecks)
         if (null == res)
           throw new Error(
             'Problem with running check ' +
               checkDetails.name +
-              ' - return obj is undefined'
+              ' - return obj is undefined\n'
           )
         results[checkName] = res
         if (false == res.pass) {
@@ -49,7 +49,7 @@ module.exports = {
         }
       }
       if (throwChecks && 0 < resultsLog.length) {
-        throw new Error('Failed Checks:\n' + resultsLog)
+        throw new Error('Failed Checks:\n' + resultsLog + '\n')
       } else {
         return results
       }
@@ -64,7 +64,7 @@ module.exports = {
         .find()
       const jsonFiles = await jsonPromise
       if (null == jsonFiles)
-        throw new Error('Local JSON files not found correctly')
+        throw new Error('Local JSON file names not found correctly\n')
 
       // non-json files
       const stringPromise = Filehound.create()
@@ -75,7 +75,7 @@ module.exports = {
       // add git config file to file list (for default branch check)
       stringFiles.push(process.cwd() + '/.git/config')
       if (null == stringFiles)
-        throw new Error('Local files (excl JSON) not found correctly')
+        throw new Error('Local file names (excl JSON) not found correctly\n')
 
       let dataForChecks = {}
 
@@ -85,7 +85,7 @@ module.exports = {
         let fileName = Path.basename(filePath)
         let fileContent = require(filePath)
         if (null == fileContent)
-          throw new Error('Problem reading ' + filename + ' file')
+          throw new Error('Problem reading ' + filename + ' file\n')
 
         dataForChecks[fileName] = fileContent
 
@@ -105,14 +105,10 @@ module.exports = {
         fileExts.push(Path.extname(fileName))
         let fileContent = Fs.readFileSync(filePath, 'utf-8')
         if (null == fileContent)
-          throw new Error('Problem reading ' + filename + ' file')
+          throw new Error('Problem reading ' + filename + ' file\n')
 
         dataForChecks[fileName] = fileContent
       }
-
-      // getting default branch name
-      // git remote show REMOTE_REPO_NAME | grep 'HEAD branch' | cut -d' ' -f5
-      // exec("git remote show origin | grep 'HEAD branch' | cut -d' ' -f5")
 
       let config = ['base']
       if (fileExts.includes('.ts')) {
