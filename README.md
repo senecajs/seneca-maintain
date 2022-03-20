@@ -19,8 +19,11 @@ If you are new to Seneca in general, please take a look at [senecajs.org](https:
 
 ## Install
 
-~~`npm install @seneca/maintain`~~
-Version 1.0 of this package is pending - the package on [NPM](https://www.npmjs.org) does not yet include the functionalities you see described here. Please wait until the release of 1.0 before installing, and check back regularly for updates.
+`npm install -D @seneca/maintain`
+
+Run the above command from your plugin's root directory to [install this tool](https://www.npmjs.com/package/@seneca/maintain). The `-D` flag (alternatively `--save-dev`) marks it as a _devDependency_ - meaning it is used during development and not as part of production.
+
+Check out the official docs on dependencies and devDependencies [here](https://docs.npmjs.com/specifying-dependencies-and-devdependencies-in-a-package-json-file).
 
 ## Quick Example
 
@@ -43,9 +46,21 @@ https://github.com/senecajs/seneca-maintain/blob/main/README.md
 
 ## More Examples
 
+### Including in Test Script
+
+```js
+const { Maintain } = require('@seneca/maintain')
+
+Maintain()
+```
+
+This maintenance tool can also be run alongside existing tests, by including the above code snippet within your test script (usually `index.test.js` or similar).
+
+On success, nothing will be printed to console, and the script will continue as normal. On a fail, the script will throw a custom error with details of what went wrong.
+
 ### Configurations
 
-Configurations are used to run additional checks based on the architecture of your specific plugin. At the moment, we have three configs - Base, JavaScript, and TypeScript. The base configuration is run by default, and the tool will apply language specific configurations based on the language of each plugin. No action on your part is necessary.
+Configurations are used to run additional checks based on the architecture of your specific plugin. At the moment, there are three configs - Base, JavaScript, and TypeScript. The base configuration is run by default, and the tool will apply language-specific configurations based on the language of your plugin. No action on your part is necessary.
 
 ## Motivation
 
