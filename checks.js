@@ -4,7 +4,7 @@ module.exports = {
       config: 'base',
       kind: 'check_branch',
       file: 'config',
-      branch: 'main',
+      branch: '[branch "main"]',
     },
 
     content_readme: {
