@@ -155,8 +155,8 @@ module.exports = {
           dataForChecks
         ) {
           let file = checkDetails.file
-          let ifFile = checkDetails.if_file
-          let pass = ifFile in dataForChecks
+          let fileX = checkDetails.fileX
+          let pass = file in dataForChecks
           let why = 'json_file_not_found'
           let searchContent = checkDetails.contains
           let searchIsNot = checkDetails.contains_is_not
@@ -164,9 +164,9 @@ module.exports = {
           let config = checkDetails.config
 
           if (true == pass) {
-            const ifFileContent = dataForChecks[ifFile]
+            const fileXContent = dataForChecks[fileX]
             if ('key' == containsType) {
-              let searchIs = Hoek.reach(ifFileContent, searchContent)
+              let searchIs = Hoek.reach(fileXContent, searchContent)
               pass = null != searchIs && searchIsNot != searchIs
             } else {
               // add in "else if" clause if searching for json value
@@ -175,12 +175,12 @@ module.exports = {
 
             if (true == pass) {
               if ('js' == config) {
-                file = searchIs
-                pass = file in dataForChecks
+                fileX = searchIs
+                pass = fileX in dataForChecks
               }
               if ('ts' == config) {
-                file = Path.basename(searchIs, '.js') + '.ts'
-                pass = file in dataForChecks
+                fileX = Path.basename(searchIs, '.js') + '.ts'
+                pass = fileX in dataForChecks
               }
 
               if (true == pass) {
