@@ -164,14 +164,11 @@ module.exports = {
           let config = checkDetails.config
 
           if (true == pass) {
-            const fileXContent = dataForChecks[fileX]
-            if ('key' == containsType) {
-              let searchIs = Hoek.reach(fileXContent, searchContent)
-              pass = null != searchIs && searchIsNot != searchIs
-            } else {
-              // add in "else if" clause if searching for json value
-              pass = false
-            }
+            const fileContent = dataForChecks[file]
+
+            // add in "if else if" or switch clause if searching for json value at any point
+            let searchIs = Hoek.reach(fileContent, searchContent)
+            pass = null != searchIs && searchIsNot != searchIs
 
             if (true == pass) {
               if ('js' == config) {
