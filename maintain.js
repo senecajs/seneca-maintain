@@ -133,60 +133,21 @@ module.exports = {
 
     function checkOperations() {
       return {
-        file_exist: async function (checkDetails, dataForChecks) {
+        check_branch: async function (checkDetails, dataForChecks) {
           let file = checkDetails.file
           let pass = file in dataForChecks
-          let why = 'file_not_found'
-          if (true == pass) {
-            why = 'file_found'
-          }
-
-          return {
-            check: checkDetails.name,
-            kind: checkDetails.kind,
-            file: file,
-            pass: pass,
-            why: why,
-          }
-        },
-
-        fileX_exist_if_contain_json: async function (
-          checkDetails,
-          dataForChecks
-        ) {
-          let file = checkDetails.file
-          let fileX = checkDetails.fileX
-          let pass = file in dataForChecks
-          let why = 'json_file_not_found'
-          let searchContent = checkDetails.contains
-          let searchIsNot = checkDetails.contains_is_not
-          let containsType = checkDetails.contains_type
-          let config = checkDetails.config
+          let branch = checkDetails.branch
+          let why = 'git_config_file_not_found'
 
           if (true == pass) {
             const fileContent = dataForChecks[file]
 
-            // add in "if else if" or switch clause if searching for json value at any point
-            let searchIs = Hoek.reach(fileContent, searchContent)
-            pass = null != searchIs && searchIsNot != searchIs
+            pass = fileContent.includes(branch)
 
             if (true == pass) {
-              if ('js' == config) {
-                fileX = searchIs
-                pass = fileX in dataForChecks
-              }
-              if ('ts' == config) {
-                fileX = Path.basename(searchIs, '.js') + '.ts'
-                pass = fileX in dataForChecks
-              }
-
-              if (true == pass) {
-                why = 'file_found'
-              } else {
-                why = 'file_not_found'
-              }
+              why = 'branch_correct'
             } else {
-              why = 'incorrect_value'
+              why = 'branch_incorrect'
             }
           }
 
@@ -199,17 +160,21 @@ module.exports = {
           }
         },
 
-        content_contain_string: async function (checkDetails, dataForChecks) {
+        content_contain_json: async function (checkDetails, dataForChecks) {
           let file = checkDetails.file
           let pass = file in dataForChecks
           let searchContent = checkDetails.contains
-          let why = 'file_not_found'
+          let containsType = checkDetails.contains_type
+          // let searchLevels = Object.values(searchContent)
+          let why = 'file_' + file + '_not_found'
 
           if (true == pass) {
             const fileContent = dataForChecks[file]
-
-            for (let i = 0; i < searchContent.length; i++) {
-              pass = fileContent.includes(searchContent[i])
+            if ('key' == containsType) {
+              pass = null != Hoek.reach(fileContent, searchContent)
+            } else {
+              // add in "else if" clause if searching for json value
+              pass = false
             }
 
             if (true == pass) {
@@ -231,9 +196,9 @@ module.exports = {
         content_contain_markdown: async function (checkDetails, dataForChecks) {
           let file = checkDetails.file
           let pass = file in dataForChecks
-          let why = 'file_not_found'
+          let why = 'file_' + file + '_not_found'
           if (true == pass) {
-            why = 'file_found'
+            why = 'file_' + file + '_found'
 
             let searchArray = checkDetails.contains
             // Reassignment of #1 heading text
@@ -281,21 +246,17 @@ module.exports = {
           }
         },
 
-        content_contain_json: async function (checkDetails, dataForChecks) {
+        content_contain_string: async function (checkDetails, dataForChecks) {
           let file = checkDetails.file
           let pass = file in dataForChecks
           let searchContent = checkDetails.contains
-          let containsType = checkDetails.contains_type
-          // let searchLevels = Object.values(searchContent)
-          let why = 'file_not_found'
+          let why = 'file_' + file + '_not_found'
 
           if (true == pass) {
             const fileContent = dataForChecks[file]
-            if ('key' == containsType) {
-              pass = null != Hoek.reach(fileContent, searchContent)
-            } else {
-              // add in "else if" clause if searching for json value
-              pass = false
+
+            for (let i = 0; i < searchContent.length; i++) {
+              pass = fileContent.includes(searchContent[i])
             }
 
             if (true == pass) {
@@ -314,21 +275,60 @@ module.exports = {
           }
         },
 
-        check_branch: async function (checkDetails, dataForChecks) {
+        file_exist: async function (checkDetails, dataForChecks) {
           let file = checkDetails.file
           let pass = file in dataForChecks
-          let branch = checkDetails.branch
-          let why = 'file_not_found'
+          let why = 'file_' + file + '_not_found'
+          if (true == pass) {
+            why = 'file_' + file + '_found'
+          }
+
+          return {
+            check: checkDetails.name,
+            kind: checkDetails.kind,
+            file: file,
+            pass: pass,
+            why: why,
+          }
+        },
+
+        fileX_exist_if_contain_json: async function (
+          checkDetails,
+          dataForChecks
+        ) {
+          let file = checkDetails.file
+          let fileX = checkDetails.fileX
+          let pass = file in dataForChecks
+          let why = 'file_' + file + '_not_found'
+          let searchContent = checkDetails.contains
+          let searchIsNot = checkDetails.contains_is_not
+          let containsType = checkDetails.contains_type
+          let config = checkDetails.config
 
           if (true == pass) {
             const fileContent = dataForChecks[file]
 
-            pass = fileContent.includes(branch)
+            // add in "if else if" or switch clause if searching for json value at any point
+            let searchIs = Hoek.reach(fileContent, searchContent)
+            pass = null != searchIs && searchIsNot != searchIs
 
             if (true == pass) {
-              why = 'content_found'
+              if ('js' == config) {
+                fileX = searchIs
+                pass = fileX in dataForChecks
+              }
+              if ('ts' == config) {
+                fileX = Path.basename(searchIs, '.js') + '.ts'
+                pass = fileX in dataForChecks
+              }
+
+              if (true == pass) {
+                why = 'file_' + fileX + '_found'
+              } else {
+                why = 'file_' + fileX + '_not_found'
+              }
             } else {
-              why = 'content_not_found'
+              why = 'invalid_search_value'
             }
           }
 
