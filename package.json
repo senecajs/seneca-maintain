@@ -1,8 +1,8 @@
 {
   "name": "@seneca/maintain",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Run maintenance tests for Seneca plugins.",
-  "main": "./maintain.js",
+  "main": "maintain.js",
   "scripts": {
     "test": "echo no-test",
     "clean": "rm -rf node_modules package-lock.json yarn.lock",
