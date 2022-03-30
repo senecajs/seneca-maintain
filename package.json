@@ -1,6 +1,6 @@
 {
   "name": "@seneca/maintain",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Run maintenance tests for Seneca plugins.",
   "main": "maintain.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "prettier": "prettier --write *.js lib/*.js test/*.js"
   },
   "bin": {
-    "cli-maintain": "./bin/cli-maintain.js"
+    "cli-maintain": "bin/cli-maintain.js"
   },
   "repository": {
     "type": "git",
