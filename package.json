@@ -1,6 +1,6 @@
 {
   "name": "@seneca/maintain",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Run maintenance tests for Seneca plugins.",
   "main": "maintain.js",
   "scripts": {

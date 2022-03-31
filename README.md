@@ -35,6 +35,12 @@ Maintain()
 
 This maintenance tool can be run alongside existing tests, by including the above code snippet within your test script (usually `index.test.js` or similar).
 
+Run the script simply with node followed by the path to your test file:
+
+```bash
+$ node <index.test.js>
+```
+
 On success, nothing will be printed to console, and the script will continue as normal. On a fail, the script will throw a custom error with details of what went wrong.
 
 ## More Examples
@@ -60,12 +66,6 @@ https://github.com/senecajs/seneca-maintain/blob/main/README.md
 
 Configurations are used to run additional checks based on the architecture of your specific plugin. At the moment, there are three configs - Base, JavaScript, and TypeScript. The base configuration is run by default, and the tool will apply language-specific configurations based on the language of your plugin. No action on your part is necessary.
 
-## Motivation
-
-## Support
-
-Check out our sponsors and supporters, Voxgig, on their website [here](https://www.voxgig.com).
-
 ### Check Descriptions
 
 | Name                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
@@ -81,6 +81,12 @@ Check out our sponsors and supporters, Voxgig, on their website [here](https://w
 | **readme_headings**     | Your README.md file should contain only one H1-level heading (denoted by a single hash (`#`) in Markdown), the value of which should be `<package.name>`, where `<package.name>` is the name taken from the "name" value in the package.json file. Additionally, your README.md file should contain eight and only eight H2-level headings (denoted by a double-hash (`##`) in Markdown). The values of these H2 headings should be the following (order must be conserved): Install, Quick Example, More Examples, Motivation, Support, API, Contributing, Background. You may include as many lower-level headings between these as you wish. This README.md document passes this check - refer to it if needed. |
 | **test_pkgjson**        | Your package.json file should include a `scripts.test` key, or a key named "test" nested within the "scripts" value. The value of this key is up to you.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | **version_codeconduct** | Your CODE_OF_CONDUCT.md file should contain the latest version of Contributor Covenant's Code of Conduct, as denoted [here](https://www.contributor-covenant.org/version/2/1/code_of_conduct/).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+
+## Motivation
+
+## Support
+
+Check out our sponsors and supporters, Voxgig, on their website [here](https://www.voxgig.com).
 
 ## API
 
