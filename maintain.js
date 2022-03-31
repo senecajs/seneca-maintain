@@ -218,14 +218,19 @@ module.exports = {
 
             if (headings.length == searchArray.length) {
               let searchFail = ''
+              let noFail = true
               for (let i = 0; i < searchArray.length; i++) {
                 pass =
                   headings[i].depth == searchArray[i].depth &&
                   headings[i].text == searchArray[i].text
                 if (false == pass) {
+                  noFail = false
                   let nb = i + 1
                   searchFail += '_"' + searchArray[i].text + '"'
                 }
+              }
+              if (!noFail) {
+                pass = noFail
               }
               why = 'heading(s)' + searchFail + '_not_found'
             } else {
@@ -238,7 +243,7 @@ module.exports = {
                 '_found'
             }
           }
-
+          console.log(' final pass', pass)
           return {
             check: checkDetails.name,
             kind: checkDetails.kind,
