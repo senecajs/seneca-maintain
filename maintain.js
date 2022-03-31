@@ -243,7 +243,6 @@ module.exports = {
                 '_found'
             }
           }
-          console.log(' final pass', pass)
           return {
             check: checkDetails.name,
             kind: checkDetails.kind,
