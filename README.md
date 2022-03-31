@@ -27,36 +27,34 @@ Check out the official docs on dependencies and devDependencies [here](https://d
 
 ## Quick Example
 
-```bash
-$ cli-maintain
-```
-
-Run the above command from the directory of the plugin you wish to test. Below is a sample of the result you may recieve, in this case with two failed checks.
-
-```txt
-Total checks for this configuration: 8
-
-Failed checks: 2
-    exist_codeconduct (why: file not found)
-    version_codeconduct (why: file not found)
-
-Please refer to the README.md document for descriptions of all checks.
-https://github.com/senecajs/seneca-maintain/blob/main/README.md
-```
-
-## More Examples
-
-### Including in Test Script
-
 ```js
 const { Maintain } = require('@seneca/maintain')
 
 Maintain()
 ```
 
-This maintenance tool can also be run alongside existing tests, by including the above code snippet within your test script (usually `index.test.js` or similar).
+This maintenance tool can be run alongside existing tests, by including the above code snippet within your test script (usually `index.test.js` or similar).
 
 On success, nothing will be printed to console, and the script will continue as normal. On a fail, the script will throw a custom error with details of what went wrong.
+
+## More Examples
+
+### CLI Tool (coming soon)
+
+~~`$ cli-maintain`~~
+
+Sample output :
+
+```txt
+Total checks for this configuration: 8
+
+Failed checks: 2
+  exist_codeconduct (why: file not found)
+  version_codeconduct (why: file not found)
+
+Please refer to the README.md document for descriptions of all checks.
+https://github.com/senecajs/seneca-maintain/blob/main/README.md
+```
 
 ### Configurations
 
