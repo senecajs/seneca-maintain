@@ -44,7 +44,9 @@ module.exports = {
           )
         results[checkName] = res
         if (false == res.pass) {
-          resultsLog.push('\n' + res.check + ' failed (' + res.why + ')')
+          resultsLog.push(
+            '\n' + res.check + ' failed (' + res.why.replace(/_/g, ' ') + ')'
+          )
         }
       }
       if (throwChecks && 0 < resultsLog.length) {
