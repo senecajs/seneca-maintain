@@ -1,6 +1,8 @@
 module.exports = {
   checkList: {
     check_default: {
+      class: 'primary',
+      secondary: null,
       config: 'base',
       kind: 'check_branch',
       file: 'config',
@@ -8,6 +10,8 @@ module.exports = {
     },
 
     content_readme: {
+      class: 'primary',
+      secondary: null,
       config: 'base',
       kind: 'content_contain_string',
       file: 'README.md',
@@ -15,12 +19,16 @@ module.exports = {
     },
 
     exist_codeconduct: {
+      class: 'primary',
+      secondary: null,
       config: 'base',
       kind: 'file_exist',
       file: 'CODE_OF_CONDUCT.md',
     },
 
     exist_dist: {
+      class: 'primary',
+      secondary: null,
       config: 'ts',
       kind: 'fileX_exist_if_contain_json',
       fileX: '404',
@@ -31,6 +39,8 @@ module.exports = {
     },
 
     exist_entry: {
+      class: 'primary',
+      secondary: null,
       config: 'js',
       kind: 'fileX_exist_if_contain_json',
       fileX: '404',
@@ -41,24 +51,32 @@ module.exports = {
     },
 
     exist_license: {
+      class: 'primary',
+      secondary: null,
       config: 'base',
       kind: 'file_exist',
       file: 'LICENSE',
     },
 
     exist_pkgjson: {
+      class: 'primary',
+      secondary: null,
       config: 'base',
       kind: 'file_exist',
       file: 'package.json',
     },
 
     exist_readme: {
+      class: 'primary',
+      secondary: null,
       config: 'base',
       kind: 'file_exist',
       file: 'README.md',
     },
 
     readme_headings: {
+      class: 'primary',
+      secondary: null,
       config: 'base',
       kind: 'content_contain_markdown',
       file: 'README.md',
@@ -75,7 +93,20 @@ module.exports = {
       ],
     },
 
+    scoped_package: {
+      class: 'primary',
+      secondary: 'senecajs_package',
+      config: 'base',
+      kind: 'content_contain_json',
+      file: 'package.json',
+      contains_key: ['name'],
+      contains_value: '@seneca/',
+      contains_type: 'value',
+    },
+
     senecajs_package: {
+      class: 'secondary',
+      secondary: null,
       config: 'base',
       kind: 'content_contain_json',
       file: 'package.json',
@@ -85,6 +116,8 @@ module.exports = {
     },
 
     test_pkgjson: {
+      class: 'primary',
+      secondary: null,
       config: 'base',
       kind: 'content_contain_json',
       file: 'package.json',
@@ -93,6 +126,8 @@ module.exports = {
     },
 
     version_codeconduct: {
+      class: 'primary',
+      secondary: null,
       config: 'base',
       kind: 'content_contain_string',
       file: 'CODE_OF_CONDUCT.md',

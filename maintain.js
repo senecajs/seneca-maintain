@@ -35,7 +35,25 @@ module.exports = {
         if (null == checkKind)
           throw new Error('Check operation is not defined in script.\n')
 
-        let res = await checkKind(checkDetails, dataForChecks)
+        let res = null
+
+        if (null == checkDetails.secondary) {
+          res = await checkKind(checkDetails, dataForChecks)
+        } else {
+          res = await checkKind(checkDetails.secondary, dataForChecks)
+          if (!res.pass) {
+            res = {
+              check: checkDetails.name,
+              kind: checkDetails.kind,
+              file: checkDetails.file,
+              pass: false,
+              why: 'dependent_check_' + checkDetails.secondary + 'failed',
+            }
+          } else {
+            res = await checkKind(checkDetails, dataForChecks)
+          }
+        }
+
         if (null == res)
           throw new Error(
             'Problem with running check ' +
@@ -121,7 +139,10 @@ module.exports = {
       const relCheckList = {}
       for (const checkName in checkList) {
         let checkDetails = checkList[checkName]
-        if (config.includes(checkDetails.config)) {
+        if (
+          'primary' == checkDetails.class &&
+          config.includes(checkDetails.config)
+        ) {
           relCheckList[checkName] = checkDetails
         }
       }
