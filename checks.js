@@ -75,11 +75,20 @@ module.exports = {
       ],
     },
 
+    senecajs_package: {
+      config: 'base',
+      kind: 'content_contain_json',
+      file: 'package.json',
+      contains_key: ['repository', 'url'],
+      contains_value: 'github.com/senecajs/',
+      contains_type: 'value',
+    },
+
     test_pkgjson: {
       config: 'base',
       kind: 'content_contain_json',
       file: 'package.json',
-      contains: ['scripts', 'test'],
+      contains_key: ['scripts', 'test'],
       contains_type: 'key',
     },
 

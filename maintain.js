@@ -165,7 +165,8 @@ module.exports = {
         content_contain_json: async function (checkDetails, dataForChecks) {
           let file = checkDetails.file
           let pass = file in dataForChecks
-          let searchContent = checkDetails.contains
+          let searchKey = checkDetails.contains_key
+          let searchValue = checkDetails.contains_value
           let containsType = checkDetails.contains_type
           // let searchLevels = Object.values(searchContent)
           let why = 'file_' + file + '_not_found'
@@ -173,9 +174,11 @@ module.exports = {
           if (true == pass) {
             const fileContent = dataForChecks[file]
             if ('key' == containsType) {
-              pass = null != Hoek.reach(fileContent, searchContent)
+              pass = null != Hoek.reach(fileContent, searchKey)
+            } else if ('value' == containsType) {
+              console.log(Hoek.reach(fileContent, searchKey))
+              pass = Hoek.reach(fileContent, searchKey).includes(searchValue)
             } else {
-              // add in "else if" clause if searching for json value
               pass = false
             }
 
