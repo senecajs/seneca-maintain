@@ -21,7 +21,7 @@ async function conclusionCLI() {
       failNb++
       let checkWhy = checkDetails.why
       let failWhy =
-        checkDetails.check + ' (why: ' + checkWhy.replace(/_/g, ' ') + ')'
+        checkDetails.check + ' (why: ' + checkWhy.replace(/__/g, ' ') + ')'
       fails.push(failWhy)
     }
   }

@@ -47,7 +47,7 @@ module.exports = {
               kind: checkDetails.kind,
               file: checkDetails.file,
               pass: false,
-              why: 'dependent_check_' + checkDetails.secondary + 'failed',
+              why: 'dependent__check__' + checkDetails.secondary + '__failed',
             }
           } else {
             res = await checkKind(checkDetails, dataForChecks)
@@ -63,7 +63,7 @@ module.exports = {
         results[checkName] = res
         if (false == res.pass) {
           resultsLog.push(
-            '\n' + res.check + ' failed (' + res.why.replace(/_/g, ' ') + ')'
+            '\n' + res.check + ' failed (' + res.why.replace(/__/g, ' ') + ')'
           )
         }
       }
@@ -160,7 +160,7 @@ module.exports = {
           let file = checkDetails.file
           let pass = file in dataForChecks
           let branch = checkDetails.branch
-          let why = 'git_config_file_not_found'
+          let why = 'git__config__file__not__found'
 
           if (true == pass) {
             const fileContent = dataForChecks[file]
@@ -168,9 +168,9 @@ module.exports = {
             pass = fileContent.includes(branch)
 
             if (true == pass) {
-              why = 'branch_correct'
+              why = 'branch__correct'
             } else {
-              why = 'branch_incorrect'
+              why = 'branch__incorrect'
             }
           }
 
@@ -190,7 +190,7 @@ module.exports = {
           let searchValue = checkDetails.contains_value
           let containsType = checkDetails.contains_type
           // let searchLevels = Object.values(searchContent)
-          let why = 'file_' + file + '_not_found'
+          let why = 'file__' + file + '__not__found'
 
           if (true == pass) {
             const fileContent = dataForChecks[file]
@@ -204,9 +204,9 @@ module.exports = {
             }
 
             if (true == pass) {
-              why = 'content_found'
+              why = 'content__found'
             } else {
-              why = 'content_not_found'
+              why = 'content__not__found'
             }
           }
 
@@ -222,9 +222,9 @@ module.exports = {
         content_contain_markdown: async function (checkDetails, dataForChecks) {
           let file = checkDetails.file
           let pass = file in dataForChecks
-          let why = 'file_' + file + '_not_found'
+          let why = 'file__' + file + '__not__found'
           if (true == pass) {
-            why = 'file_' + file + '_found'
+            why = 'file__' + file + '__found'
 
             let searchArray = checkDetails.contains
             // Reassignment of #1 heading text
@@ -256,15 +256,15 @@ module.exports = {
               if (!noFail) {
                 pass = noFail
               }
-              why = 'heading(s)' + searchFail + '_not_found'
+              why = 'heading(s)' + searchFail + '__not__found'
             } else {
               pass = false
               why =
-                'nb_headings_incorrect_-_' +
+                'nb__headings__incorrect__-__' +
                 searchArray.length +
-                '_required,_' +
+                '__required,__' +
                 headings.length +
-                '_found'
+                '__found'
             }
           }
           return {
@@ -280,7 +280,7 @@ module.exports = {
           let file = checkDetails.file
           let pass = file in dataForChecks
           let searchContent = checkDetails.contains
-          let why = 'file_' + file + '_not_found'
+          let why = 'file__' + file + '__not__found'
 
           if (true == pass) {
             const fileContent = dataForChecks[file]
@@ -290,9 +290,9 @@ module.exports = {
             }
 
             if (true == pass) {
-              why = 'content_found'
+              why = 'content__found'
             } else {
-              why = 'content_not_found'
+              why = 'content__not__found'
             }
           }
 
@@ -308,9 +308,9 @@ module.exports = {
         file_exist: async function (checkDetails, dataForChecks) {
           let file = checkDetails.file
           let pass = file in dataForChecks
-          let why = 'file_' + file + '_not_found'
+          let why = 'file__' + file + '__not__found'
           if (true == pass) {
-            why = 'file_' + file + '_found'
+            why = 'file__' + file + '__found'
           }
 
           return {
@@ -329,7 +329,7 @@ module.exports = {
           let file = checkDetails.file
           let fileX = checkDetails.fileX
           let pass = file in dataForChecks
-          let why = 'file_' + file + '_not_found'
+          let why = 'file__' + file + '__not__found'
           let searchContent = checkDetails.contains
           let searchIsNot = checkDetails.contains_is_not
           let containsType = checkDetails.contains_type
@@ -353,12 +353,12 @@ module.exports = {
               }
 
               if (true == pass) {
-                why = 'file_' + fileX + '_found'
+                why = 'file__' + fileX + '__found'
               } else {
-                why = 'file_' + fileX + '_not_found'
+                why = 'file__' + fileX + '__not__found'
               }
             } else {
-              why = 'invalid_search_value'
+              why = 'invalid__search__value'
             }
           }
 
