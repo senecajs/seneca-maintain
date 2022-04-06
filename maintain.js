@@ -36,23 +36,13 @@ module.exports = {
           throw new Error('Check operation is not defined in script.\n')
 
         let res = null
-
-        if (null == checkDetails.secondary) {
-          res = await checkKind(checkDetails, dataForChecks)
-        } else {
+        if (null != checkDetails.secondary) {
           res = await checkKind(checkDetails.secondary, dataForChecks)
           if (!res.pass) {
-            res = {
-              check: checkDetails.name,
-              kind: checkDetails.kind,
-              file: checkDetails.file,
-              pass: false,
-              why: 'dependent__check__' + checkDetails.secondary + '__failed',
-            }
-          } else {
-            res = await checkKind(checkDetails, dataForChecks)
+            continue
           }
         }
+        res = await checkKind(checkDetails, dataForChecks)
 
         if (null == res)
           throw new Error(
@@ -197,6 +187,7 @@ module.exports = {
             if ('key' == containsType) {
               pass = null != Hoek.reach(fileContent, searchKey)
             } else if ('value' == containsType) {
+              console.log(searchValue)
               console.log(Hoek.reach(fileContent, searchKey))
               pass = Hoek.reach(fileContent, searchKey).includes(searchValue)
             } else {
