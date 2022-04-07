@@ -81,8 +81,10 @@ module.exports = {
         .discard(/node_modules/, /.git/, /.json/)
         .find()
       const stringFiles = await stringPromise
-      // add git config file to file list (for default branch check)
+      // add specific git files for checks
       stringFiles.push(process.cwd() + '/.git/config')
+      stringFiles.push(process.cwd() + '/.gitignore')
+      console.log(stringFiles)
       if (null == stringFiles)
         throw new Error('Local file names (excl JSON) not found correctly\n')
 

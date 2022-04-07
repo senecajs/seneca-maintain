@@ -22,6 +22,17 @@ module.exports = {
       contains: ['Voxgig'],
     },
 
+    content_gitignore: {
+      include: [/.*/],
+      exclude: [],
+      class: 'primary',
+      secondary: null,
+      config: 'base',
+      kind: 'content_contain_string',
+      file: '.gitignore',
+      contains: ['package-lock.json'],
+    },
+
     exist_codeconduct: {
       include: [/.*/],
       exclude: [],
