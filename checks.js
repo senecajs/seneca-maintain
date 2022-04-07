@@ -1,6 +1,8 @@
 module.exports = {
   checkList: {
     check_default: {
+      include: [/.*/],
+      exclude: [],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -10,6 +12,8 @@ module.exports = {
     },
 
     content_readme: {
+      include: [/.*/],
+      exclude: [],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -19,6 +23,8 @@ module.exports = {
     },
 
     exist_codeconduct: {
+      include: [/.*/],
+      exclude: [],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -27,6 +33,8 @@ module.exports = {
     },
 
     exist_dist: {
+      include: [/.*/],
+      exclude: [],
       class: 'primary',
       secondary: null,
       config: 'ts',
@@ -39,6 +47,8 @@ module.exports = {
     },
 
     exist_entry: {
+      include: [/.*/],
+      exclude: [],
       class: 'primary',
       secondary: null,
       config: 'js',
@@ -51,6 +61,8 @@ module.exports = {
     },
 
     exist_license: {
+      include: [/.*/],
+      exclude: [],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -59,6 +71,8 @@ module.exports = {
     },
 
     exist_pkgjson: {
+      include: [/.*/],
+      exclude: [],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -67,6 +81,8 @@ module.exports = {
     },
 
     exist_readme: {
+      include: [/.*/],
+      exclude: [],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -75,6 +91,8 @@ module.exports = {
     },
 
     readme_headings: {
+      include: [/.*/],
+      exclude: [],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -94,6 +112,8 @@ module.exports = {
     },
 
     scoped_package: {
+      include: [/.*/],
+      exclude: [],
       class: 'primary',
       secondary: 'senecajs_package',
       config: 'base',
@@ -105,6 +125,8 @@ module.exports = {
     },
 
     senecajs_package: {
+      include: [/.*/],
+      exclude: [],
       class: 'secondary',
       secondary: null,
       config: 'base',
@@ -116,6 +138,8 @@ module.exports = {
     },
 
     test_pkgjson: {
+      include: [/.*/],
+      exclude: [],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -126,6 +150,8 @@ module.exports = {
     },
 
     version_codeconduct: {
+      include: [/.*/],
+      exclude: [],
       class: 'primary',
       secondary: null,
       config: 'base',
