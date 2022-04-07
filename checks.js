@@ -2,7 +2,7 @@ module.exports = {
   checkList: {
     check_default: {
       include: [/.*/],
-      exclude: [],
+      exclude: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -13,7 +13,7 @@ module.exports = {
 
     content_readme: {
       include: [/.*/],
-      exclude: [],
+      exclude: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -24,7 +24,7 @@ module.exports = {
 
     content_gitignore: {
       include: [/.*/],
-      exclude: [],
+      exclude: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -35,7 +35,7 @@ module.exports = {
 
     exist_codeconduct: {
       include: [/.*/],
-      exclude: [],
+      exclude: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -45,7 +45,7 @@ module.exports = {
 
     exist_dist: {
       include: [/.*/],
-      exclude: [],
+      exclude: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'ts',
@@ -59,7 +59,7 @@ module.exports = {
 
     exist_entry: {
       include: [/.*/],
-      exclude: [],
+      exclude: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'js',
@@ -73,7 +73,7 @@ module.exports = {
 
     exist_license: {
       include: [/.*/],
-      exclude: [],
+      exclude: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -83,7 +83,7 @@ module.exports = {
 
     exist_pkgjson: {
       include: [/.*/],
-      exclude: [],
+      exclude: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -93,7 +93,7 @@ module.exports = {
 
     exist_readme: {
       include: [/.*/],
-      exclude: [],
+      exclude: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -103,7 +103,7 @@ module.exports = {
 
     readme_headings: {
       include: [/.*/],
-      exclude: [],
+      exclude: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -123,8 +123,8 @@ module.exports = {
     },
 
     scoped_package: {
-      include: [/.*/],
-      exclude: [],
+      include: [/senecajs/],
+      exclude: [/.^/],
       class: 'primary',
       secondary: 'senecajs_package',
       config: 'base',
@@ -135,22 +135,22 @@ module.exports = {
       contains_type: 'value',
     },
 
-    senecajs_package: {
-      include: [/.*/],
-      exclude: [],
-      class: 'secondary',
-      secondary: null,
-      config: 'base',
-      kind: 'content_contain_json',
-      file: 'package.json',
-      contains_key: ['repository', 'url'],
-      contains_value: 'github.com/senecajs/',
-      contains_type: 'value',
-    },
+    // senecajs_package: {
+    //   include: [/.*/],
+    //   exclude: [/.^/],
+    //   class: 'secondary',
+    //   secondary: null,
+    //   config: 'base',
+    //   kind: 'content_contain_json',
+    //   file: 'package.json',
+    //   contains_key: ['repository', 'url'],
+    //   contains_value: 'github.com/senecajs/',
+    //   contains_type: 'value',
+    // },
 
     test_pkgjson: {
       include: [/.*/],
-      exclude: [],
+      exclude: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -162,7 +162,7 @@ module.exports = {
 
     version_codeconduct: {
       include: [/.*/],
-      exclude: [],
+      exclude: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',

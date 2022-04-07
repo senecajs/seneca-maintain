@@ -35,14 +35,25 @@ module.exports = {
         if (null == checkKind)
           throw new Error('Check operation is not defined in script.\n')
 
-        let res = null
-        if (null != checkDetails.secondary) {
-          res = await checkKind(checkDetails.secondary, dataForChecks)
-          if (!res.pass) {
-            continue
-          }
+        // let res = null
+        // if (null != checkDetails.secondary) {
+        //   res = await checkKind(checkDetails.secondary, dataForChecks)
+        //   if (!res.pass) {
+        //     continue
+        //   }
+        // }
+        if (
+          checkDetails.include[0].test(
+            dataForChecks.orgName.concat('/', dataForChecks.packageName)
+          ) &&
+          !checkDetails.exclude[0].test(
+            dataForChecks.orgName.concat('/', dataForChecks.packageName)
+          )
+        ) {
+          res = await checkKind(checkDetails, dataForChecks)
+        } else {
+          continue
         }
-        res = await checkKind(checkDetails, dataForChecks)
 
         if (null == res)
           throw new Error(
@@ -84,7 +95,6 @@ module.exports = {
       // add specific git files for checks
       stringFiles.push(process.cwd() + '/.git/config')
       stringFiles.push(process.cwd() + '/.gitignore')
-      console.log(stringFiles)
       if (null == stringFiles)
         throw new Error('Local file names (excl JSON) not found correctly\n')
 
@@ -103,6 +113,7 @@ module.exports = {
         //to get package and main name from package.json file
         if ('package.json' == fileName) {
           dataForChecks.packageName = fileContent.name
+          dataForChecks.orgName = fileContent.repository.url.split('/')[3]
         }
       }
 
@@ -181,7 +192,6 @@ module.exports = {
           let searchKey = checkDetails.contains_key
           let searchValue = checkDetails.contains_value
           let containsType = checkDetails.contains_type
-          // let searchLevels = Object.values(searchContent)
           let why = 'file__' + file + '__not__found'
 
           if (true == pass) {
@@ -189,8 +199,6 @@ module.exports = {
             if ('key' == containsType) {
               pass = null != Hoek.reach(fileContent, searchKey)
             } else if ('value' == containsType) {
-              console.log(searchValue)
-              console.log(Hoek.reach(fileContent, searchKey))
               pass = Hoek.reach(fileContent, searchKey).includes(searchValue)
             } else {
               pass = false
