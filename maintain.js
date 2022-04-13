@@ -35,13 +35,19 @@ module.exports = {
         if (null == checkKind)
           throw new Error('Check operation is not defined in script.\n')
 
-        // let res = null
+        let res = null
+
+        // primary/secondary check logic
         // if (null != checkDetails.secondary) {
-        //   res = await checkKind(checkDetails.secondary, dataForChecks)
+        //   res = await checkKind(
+        //     checkList[checkDetails.secondary],
+        //     dataForChecks
+        //   )
         //   if (!res.pass) {
         //     continue
         //   }
         // }
+
         if (
           checkDetails.include[0].test(
             dataForChecks.orgName.concat('/', dataForChecks.packageName)
