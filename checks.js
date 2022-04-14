@@ -126,7 +126,7 @@ module.exports = {
       include: [/senecajs/],
       exclude: [/.^/],
       class: 'primary',
-      secondary: 'null',
+      secondary: null,
       config: 'base',
       kind: 'content_contain_json',
       file: 'package.json',
