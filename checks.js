@@ -101,6 +101,20 @@ module.exports = {
       file: 'README.md',
     },
 
+    readme_title: {
+      include: [/.*/],
+      exclude: [/.^/],
+      class: 'primary',
+      secondary: null,
+      config: 'base',
+      kind: 'content_contain_jsonX_in_markdown',
+      file: 'README.md',
+      contains: { type: 'heading', depth: 1, text: '<packagename>' },
+      jsonFile: 'package.json',
+      jsonContains: 'name',
+      jsonContains_type: 'value',
+    },
+
     readme_headings: {
       include: [/.*/],
       exclude: [/.^/],
@@ -110,7 +124,6 @@ module.exports = {
       kind: 'content_contain_markdown',
       file: 'README.md',
       contains: [
-        { type: 'heading', depth: 1, text: '<package.name>' },
         { type: 'heading', depth: 2, text: 'Install' },
         { type: 'heading', depth: 2, text: 'Quick Example' },
         { type: 'heading', depth: 2, text: 'More Examples' },

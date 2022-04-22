@@ -226,6 +226,59 @@ module.exports = {
           }
         },
 
+        content_contain_jsonX_in_markdown: async function (
+          checkDetails,
+          dataForChecks
+        ) {
+          let file = checkDetails.file
+          let jsonFile = checkDetails.jsonFile
+          let pass = file in dataForChecks
+          pass = jsonFile in dataForChecks
+          let why = 'file__' + file + '__not__found'
+          if (true == pass) {
+            why = 'file__' + file + '__found'
+
+            // getting jsonX
+            let jsonFileContent = dataForChecks[jsonFile]
+            let jsonX = ''
+            if ('value' == checkDetails.jsonContains_type) {
+              jsonX = jsonFileContent[checkDetails.jsonContains]
+            }
+            checkDetails.contains.text = jsonX
+
+            let searchArray = checkDetails.contains
+            let fileContent = dataForChecks[file]
+            // Creating AST from file
+            const lexer = new Marked.Lexer()
+            const tokens = lexer.lex(fileContent)
+            const headings = tokens.filter(
+              (token) => 'heading' == token.type && 1 == token.depth
+            )
+            const headingsText = headings.map((heading) => heading.text)
+
+            let searchFail = ''
+            let noFail = true
+            for (let i = 0; i < searchArray.length; i++) {
+              pass = headingsText.includes(searchArray[i].text)
+              if (false == pass) {
+                noFail = false
+                searchFail += '_"' + searchArray[i].text + '"'
+              }
+            }
+            if (!noFail) {
+              pass = noFail
+            }
+            why = 'heading(s)' + searchFail + '__not__found'
+          }
+          return {
+            check: checkDetails.name,
+            kind: checkDetails.kind,
+            file: file,
+            pass: pass,
+            why: why,
+          }
+        },
+
         content_contain_markdown: async function (checkDetails, dataForChecks) {
           let file = checkDetails.file
           let pass = file in dataForChecks
@@ -234,45 +287,29 @@ module.exports = {
             why = 'file__' + file + '__found'
 
             let searchArray = checkDetails.contains
-            // Reassignment of #1 heading text
-            searchArray[0].text = dataForChecks.packageName
 
             let fileContent = dataForChecks[file]
             // Creating AST from file
             const lexer = new Marked.Lexer()
             const tokens = lexer.lex(fileContent)
             const headings = tokens.filter(
-              (token) =>
-                'heading' == token.type &&
-                (1 == token.depth || 2 == token.depth)
+              (token) => 'heading' == token.type && 2 == token.depth
             )
+            const headingsText = headings.map((heading) => heading.text)
 
-            if (headings.length == searchArray.length) {
-              let searchFail = ''
-              let noFail = true
-              for (let i = 0; i < searchArray.length; i++) {
-                pass =
-                  headings[i].depth == searchArray[i].depth &&
-                  headings[i].text == searchArray[i].text
-                if (false == pass) {
-                  noFail = false
-                  let nb = i + 1
-                  searchFail += '_"' + searchArray[i].text + '"'
-                }
+            let searchFail = ''
+            let noFail = true
+            for (let i = 0; i < searchArray.length; i++) {
+              pass = headingsText.includes(searchArray[i].text)
+              if (false == pass) {
+                noFail = false
+                searchFail += '_"' + searchArray[i].text + '"'
               }
-              if (!noFail) {
-                pass = noFail
-              }
-              why = 'heading(s)' + searchFail + '__not__found'
-            } else {
-              pass = false
-              why =
-                'nb__headings__incorrect__-__' +
-                searchArray.length +
-                '__required,__' +
-                headings.length +
-                '__found'
             }
+            if (!noFail) {
+              pass = noFail
+            }
+            why = 'heading(s)' + searchFail + '__not__found'
           }
           return {
             check: checkDetails.name,
