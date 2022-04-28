@@ -89,8 +89,10 @@ module.exports = {
         .ext('json')
         .find()
       const jsonFiles = await jsonPromise
-      if (null == jsonFiles)
-        throw new Error('Local JSON file names not found correctly\n')
+      if (null == jsonFiles || 0 == Object.keys(jsonFiles))
+        throw new Error(
+          'Local JSON file names not found correctly - cannot run checks\n'
+        )
 
       // non-json files
       const stringPromise = Filehound.create()
@@ -101,8 +103,10 @@ module.exports = {
       // add specific git files for checks
       stringFiles.push(process.cwd() + '/.git/config')
       stringFiles.push(process.cwd() + '/.gitignore')
-      if (null == stringFiles)
-        throw new Error('Local file names (excl JSON) not found correctly\n')
+      if (null == stringFiles || 0 == Object.keys(stringFiles))
+        throw new Error(
+          'Local file names (excl JSON) not found correctly - cannot run checks\n'
+        )
 
       let dataForChecks = {}
 
