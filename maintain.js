@@ -1,4 +1,9 @@
 module.exports = {
+  checkList: function () {
+    const { checkList } = require('./checks')
+    return checkList
+  },
+
   Maintain: function (throwChecks = true) {
     // Node modules
     const Path = require('path')
@@ -8,7 +13,7 @@ module.exports = {
     const Filehound = require('filehound')
 
     // Internal modules
-    const { checkList } = require('./checks')
+    const { checkList } = require(this.checkList)
     const { defineChecks } = require(this.defineChecks)
 
     // Main function
@@ -26,7 +31,7 @@ module.exports = {
       let resultsLog = []
 
       for (const checkName in relCheckList) {
-        let checkDetails = checkList[checkName]
+        let checkDetails = checkList()[checkName]
         checkDetails.name = checkName
 
         let checkKind = defineChecks()[checkDetails.kind]
@@ -38,7 +43,7 @@ module.exports = {
         // primary/secondary check logic
         // if (null != checkDetails.secondary) {
         //   res = await checkKind(
-        //     checkList[checkDetails.secondary],
+        //     checkList()[checkDetails.secondary],
         //     dataForChecks
         //   )
         //   if (!res.pass) {
@@ -148,8 +153,8 @@ module.exports = {
       }
 
       const relCheckList = {}
-      for (const checkName in checkList) {
-        let checkDetails = checkList[checkName]
+      for (const checkName in checkList()) {
+        let checkDetails = checkList()[checkName]
         if (
           'primary' == checkDetails.class &&
           config.includes(checkDetails.config)
