@@ -4,7 +4,11 @@ module.exports = {
     return checkList
   },
 
-  Maintain: function (throwChecks = true) {
+  Maintain: function ({
+    throwChecks = true,
+    exclChecks = [],
+    inclChecks = [],
+  } = {}) {
     // Node modules
     const Path = require('path')
     const Fs = require('fs')
@@ -20,7 +24,7 @@ module.exports = {
     return runChecks()
 
     async function runChecks() {
-      let prep = await runChecksPrep()
+      let prep = await runChecksPrep(exclChecks, inclChecks)
       if (null == prep)
         throw new Error(
           'Issue with preparation function runChecksPrep() - returns undefined.\n'
@@ -84,7 +88,7 @@ module.exports = {
       }
     }
 
-    async function runChecksPrep() {
+    async function runChecksPrep(exclChecks, inclChecks) {
       // reading client's json files in
       const jsonPromise = Filehound.create()
         .paths(process.cwd())
@@ -153,7 +157,15 @@ module.exports = {
       }
 
       const relCheckList = {}
-      for (const checkName in checkList()) {
+
+      let listToCheck = null
+      if ([] != inclChecks) {
+        listToCheck = inclChecks
+      } else {
+        listToCheck = checkList()
+      }
+
+      for (const checkName in listToCheck) {
         let checkDetails = checkList()[checkName]
         if (
           'primary' == checkDetails.class &&
@@ -162,6 +174,13 @@ module.exports = {
           relCheckList[checkName] = checkDetails
         }
       }
+
+      if ([] != exclChecks) {
+        for (let i = 0; i < exclChecks.length; i++) {
+          delete relCheckList.exclChecks[i]
+        }
+      }
+
       return {
         relCheckList: relCheckList,
         dataForChecks: dataForChecks,
