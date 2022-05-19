@@ -1,14 +1,36 @@
 module.exports = {
-  checkList: function () {
+  checkList: function ({ config = ['base'], exclude = [], include = [] }) {
     const { checkList } = require('./checks')
-    return checkList
+
+    const relCheckList = {}
+
+    let listToCheck = {}
+    if (0 != include.length) {
+      listToCheck = include
+    } else {
+      listToCheck = checkList
+    }
+
+    for (const checkName in listToCheck) {
+      let checkDetails = checkList[checkName]
+      if (
+        'primary' == checkDetails.class &&
+        config.includes(checkDetails.config)
+      ) {
+        relCheckList[checkName] = checkDetails
+      }
+    }
+
+    if (0 != exclude.length) {
+      for (let i = 0; i < exclude.length; i++) {
+        delete relCheckList[exclude[i]]
+      }
+    }
+
+    return relCheckList
   },
 
-  Maintain: function ({
-    throwChecks = true,
-    exclChecks = [],
-    inclChecks = [],
-  } = {}) {
+  Maintain: function ({ throwChecks = true, exclude = [], include = [] } = {}) {
     // Node modules
     const Path = require('path')
     const Fs = require('fs')
@@ -24,7 +46,10 @@ module.exports = {
     return runChecks()
 
     async function runChecks() {
-      let prep = await runChecksPrep(exclChecks, inclChecks)
+      let prep = await runChecksPrep({
+        exclude: exclude,
+        include: include,
+      })
       if (null == prep)
         throw new Error(
           'Issue with preparation function runChecksPrep() - returns undefined.\n'
@@ -35,7 +60,7 @@ module.exports = {
       let resultsLog = []
 
       for (const checkName in relCheckList) {
-        let checkDetails = checkList()[checkName]
+        let checkDetails = relCheckList[checkName]
         checkDetails.name = checkName
 
         let checkKind = defineChecks()[checkDetails.kind]
@@ -88,7 +113,7 @@ module.exports = {
       }
     }
 
-    async function runChecksPrep(exclChecks, inclChecks) {
+    async function runChecksPrep({ exclude = [], include = [] }) {
       // reading client's json files in
       const jsonPromise = Filehound.create()
         .paths(process.cwd())
@@ -156,30 +181,11 @@ module.exports = {
         config.push('js')
       }
 
-      const relCheckList = {}
-
-      let listToCheck = null
-      if ([] != inclChecks) {
-        listToCheck = inclChecks
-      } else {
-        listToCheck = checkList()
-      }
-
-      for (const checkName in listToCheck) {
-        let checkDetails = checkList()[checkName]
-        if (
-          'primary' == checkDetails.class &&
-          config.includes(checkDetails.config)
-        ) {
-          relCheckList[checkName] = checkDetails
-        }
-      }
-
-      if ([] != exclChecks) {
-        for (let i = 0; i < exclChecks.length; i++) {
-          delete relCheckList.exclChecks[i]
-        }
-      }
+      let relCheckList = checkList({
+        config: config,
+        include: include,
+        exclude: exclude,
+      })
 
       return {
         relCheckList: relCheckList,
