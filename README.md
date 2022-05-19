@@ -35,7 +35,7 @@ Maintain()
 
 This maintenance tool can be run alongside existing tests, by including the above code snippet within your test script (usually `index.test.js` or similar).
 
-Run the script simply with node followed by the path to your test file:
+Run the script with Jest (see More Examples below), or simply with node and the path to your test file:
 
 ```bash
 $ node <index.test.js>
@@ -44,6 +44,46 @@ $ node <index.test.js>
 On success, nothing will be printed to console, and the script will continue as normal. On a fail, the script will throw a custom error with details of what went wrong.
 
 ## More Examples
+
+### Running Custom Check List
+
+It is possible to run only a select few checks, or to exclude certain ones, by making use of the optional parameters for the Maintain() function - an include array and an exclude array.
+
+> include - If checks are denoted in this array, they will be the only checks run.
+>
+> exclude - Any checks denoted in this array will be excluded from the run.
+
+To make use of these functionalities, simply include an object as the argument for the Maintain function - the key being the name of the array, and the value being the array of check names itself.
+
+```js
+// to only run the Code of Conduct checks
+Maintain({ include: ['exist_codeconduct', 'version_codeconduct'] })
+
+// to exclude the default branch check, but run every other check
+Maintain({ exclude: ['check_default'] })
+```
+
+### Using Jest testing framework
+
+Using the standard tool as a test suite for Jest is simple - a one line addition to your test file is all you need. In order to make use of the custom include and exclude lists however, the function call must be wrapped in an async/await block.
+
+```js
+import { Maintain } from '@seneca/maintain'
+
+// Standard run
+test('maintain', Maintain)
+
+// With parameters
+test('maintain', async () => {
+  await Maintain({
+    exclChecks: ['exist_codeconduct', 'version_codeconduct'],
+  })
+})
+```
+
+### Configurations
+
+Configurations are used to run additional checks based on the architecture of your specific plugin. At the moment, there are three configs - Base, JavaScript, and TypeScript. The base configuration is run by default, and the tool will apply language-specific configurations based on the language of your plugin. No action on your part is necessary.
 
 ### CLI Tool (coming soon)
 
@@ -61,10 +101,6 @@ Failed checks: 2
 Please refer to the README.md document for descriptions of all checks.
 https://github.com/senecajs/seneca-maintain/blob/main/README.md
 ```
-
-### Configurations
-
-Configurations are used to run additional checks based on the architecture of your specific plugin. At the moment, there are three configs - Base, JavaScript, and TypeScript. The base configuration is run by default, and the tool will apply language-specific configurations based on the language of your plugin. No action on your part is necessary.
 
 ### Check Descriptions
 
