@@ -13,7 +13,7 @@ If you're using this module, and need help, you can:
 
 - Post a [github issue](https://github.com/senecajs/repo-maintain/issues),
 - Tweet to [@senecajs](http://twitter.com/senecajs),
-- Ask the [author](https://github.com/stokesriona).
+- Ask the [author](https://github.com/rionastokes).
 
 If you are new to Seneca in general, please take a look at [senecajs.org](https://www.npmjs.com/package/seneca). We have everything from tutorials to sample apps to help get you up and running quickly.
 
