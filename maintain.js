@@ -39,8 +39,13 @@ module.exports = {
     const Filehound = require('filehound')
 
     // Internal modules
-    const { checkList } = require(this.checkList)
-    const { defineChecks } = require(this.defineChecks)
+    // const { checkList } = require(checkList)
+    // const { defineChecks } = require('defineChecks')
+    // this.checkList
+    const checkList = module.exports.checkList
+    const defineChecks = module.exports.defineChecks
+    // this.defineChecks = defineChecks
+    // console.log(this.checkList)
 
     // Main function
     return runChecks()
@@ -121,7 +126,7 @@ module.exports = {
         .ext('json')
         .find()
       const jsonFiles = await jsonPromise
-      if (null == jsonFiles || 0 == Object.keys(jsonFiles))
+      if (null == jsonFiles)
         throw new Error(
           'Local JSON file names not found correctly - cannot run checks\n'
         )
