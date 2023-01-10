@@ -1,6 +1,6 @@
 {
   "name": "@seneca/maintain",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "Run maintenance tests for Seneca plugins.",
   "main": "maintain.js",
   "scripts": {
@@ -23,7 +23,8 @@
   "author": "Ríona Stokes https://github.com/rionastokes",
   "contributors": [
     "Ríona Stokes https://github.com/rionastokes",
-    "Richard Rodger https://github.com/rjrodger"
+    "Richard Rodger https://github.com/rjrodger",
+    "https://github.com/BeAllAround"
   ],
   "license": "MIT",
   "bugs": {

@@ -153,8 +153,8 @@ module.exports = {
 
         dataForChecks[fileName] = fileContent
 
-        //to get package and main name from package.json file
-        if ( (process.cwd() + '/' + 'package.json') == filePath ) {
+        // to get package and main name from top-level package.json file
+        if (process.cwd() + '/' + 'package.json' == filePath) {
           dataForChecks.packageName = fileContent.name
           dataForChecks.orgName = fileContent.repository.url.split('/')[3]
         }
