@@ -39,13 +39,8 @@ module.exports = {
     const Filehound = require('filehound')
 
     // Internal modules
-    // const { checkList } = require(checkList)
-    // const { defineChecks } = require('defineChecks')
-    // this.checkList
     const checkList = module.exports.checkList
     const defineChecks = module.exports.defineChecks
-    // this.defineChecks = defineChecks
-    // console.log(this.checkList)
 
     // Main function
     return runChecks()
