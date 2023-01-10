@@ -1,23 +1,55 @@
 module.exports = {
-  Maintain: function (throwChecks = true) {
+  checkList: function ({ config = ['base'], exclude = [], include = [] }) {
+    const { checkList } = require('./checks')
+
+    const relCheckList = {}
+
+    let listToCheck = {}
+    if (0 != include.length) {
+      listToCheck = include
+    } else {
+      listToCheck = checkList
+    }
+
+    for (const checkName in listToCheck) {
+      let checkDetails = checkList[checkName]
+      if (
+        'primary' == checkDetails.class &&
+        config.includes(checkDetails.config)
+      ) {
+        relCheckList[checkName] = checkDetails
+      }
+    }
+
+    if (0 != exclude.length) {
+      for (let i = 0; i < exclude.length; i++) {
+        delete relCheckList[exclude[i]]
+      }
+    }
+
+    return relCheckList
+  },
+
+  Maintain: function ({ throwChecks = true, exclude = [], include = [] } = {}) {
     // Node modules
     const Path = require('path')
     const Fs = require('fs')
 
     // External modules
     const Filehound = require('filehound')
-    const Hoek = require('@hapi/hoek')
-    const Marked = require('marked')
 
     // Internal modules
-    const { checkList } = require('./checks')
-    const defineChecks = checkOperations()
+    const checkList = module.exports.checkList
+    const defineChecks = module.exports.defineChecks
 
     // Main function
     return runChecks()
 
     async function runChecks() {
-      let prep = await runChecksPrep()
+      let prep = await runChecksPrep({
+        exclude: exclude,
+        include: include,
+      })
       if (null == prep)
         throw new Error(
           'Issue with preparation function runChecksPrep() - returns undefined.\n'
@@ -28,10 +60,10 @@ module.exports = {
       let resultsLog = []
 
       for (const checkName in relCheckList) {
-        let checkDetails = checkList[checkName]
+        let checkDetails = relCheckList[checkName]
         checkDetails.name = checkName
 
-        let checkKind = defineChecks[checkDetails.kind]
+        let checkKind = defineChecks()[checkDetails.kind]
         if (null == checkKind)
           throw new Error('Check operation is not defined in script.\n')
 
@@ -40,7 +72,7 @@ module.exports = {
         // primary/secondary check logic
         // if (null != checkDetails.secondary) {
         //   res = await checkKind(
-        //     checkList[checkDetails.secondary],
+        //     checkList()[checkDetails.secondary],
         //     dataForChecks
         //   )
         //   if (!res.pass) {
@@ -81,7 +113,7 @@ module.exports = {
       }
     }
 
-    async function runChecksPrep() {
+    async function runChecksPrep({ exclude = [], include = [] }) {
       // reading client's json files in
       const jsonPromise = Filehound.create()
         .paths(process.cwd())
@@ -89,7 +121,7 @@ module.exports = {
         .ext('json')
         .find()
       const jsonFiles = await jsonPromise
-      if (null == jsonFiles || 0 == Object.keys(jsonFiles))
+      if (null == jsonFiles)
         throw new Error(
           'Local JSON file names not found correctly - cannot run checks\n'
         )
@@ -149,276 +181,280 @@ module.exports = {
         config.push('js')
       }
 
-      const relCheckList = {}
-      for (const checkName in checkList) {
-        let checkDetails = checkList[checkName]
-        if (
-          'primary' == checkDetails.class &&
-          config.includes(checkDetails.config)
-        ) {
-          relCheckList[checkName] = checkDetails
-        }
-      }
+      let relCheckList = checkList({
+        config: config,
+        include: include,
+        exclude: exclude,
+      })
+
       return {
         relCheckList: relCheckList,
         dataForChecks: dataForChecks,
       }
     }
+  },
 
-    // --------------------------------------------------------------------
+  // --------------------------------------------------------------------
 
-    function checkOperations() {
-      return {
-        check_branch: async function (checkDetails, dataForChecks) {
-          let file = checkDetails.file
-          let pass = file in dataForChecks
-          let branch = checkDetails.branch
-          let why = 'git__config__file__not__found'
+  defineChecks: function () {
+    // Node modules
+    const Path = require('path')
+
+    // External modules
+    const Hoek = require('@hapi/hoek')
+    const Marked = require('marked')
+
+    // Check operation definition
+    return {
+      check_branch: async function (checkDetails, dataForChecks) {
+        let file = checkDetails.file
+        let pass = file in dataForChecks
+        let branch = checkDetails.branch
+        let why = 'git__config__file__not__found'
+
+        if (true == pass) {
+          const fileContent = dataForChecks[file]
+
+          pass = fileContent.includes(branch)
 
           if (true == pass) {
-            const fileContent = dataForChecks[file]
+            why = 'branch__correct'
+          } else {
+            why = 'branch__incorrect'
+          }
+        }
 
-            pass = fileContent.includes(branch)
+        return {
+          check: checkDetails.name,
+          kind: checkDetails.kind,
+          file: file,
+          pass: pass,
+          why: why,
+        }
+      },
+
+      content_contain_json: async function (checkDetails, dataForChecks) {
+        let file = checkDetails.file
+        let pass = file in dataForChecks
+        let searchKey = checkDetails.contains_key
+        let searchValue = checkDetails.contains_value
+        let containsType = checkDetails.contains_type
+        let why = 'file__' + file + '__not__found'
+
+        if (true == pass) {
+          const fileContent = dataForChecks[file]
+          if ('key' == containsType) {
+            pass = null != Hoek.reach(fileContent, searchKey)
+          } else if ('value' == containsType) {
+            pass = Hoek.reach(fileContent, searchKey).includes(searchValue)
+          } else {
+            pass = false
+          }
+
+          if (true == pass) {
+            why = 'content__found'
+          } else {
+            why = 'content__not__found'
+          }
+        }
+
+        return {
+          check: checkDetails.name,
+          kind: checkDetails.kind,
+          file: file,
+          pass: pass,
+          why: why,
+        }
+      },
+
+      content_contain_jsonX_in_markdown: async function (
+        checkDetails,
+        dataForChecks
+      ) {
+        let file = checkDetails.file
+        let jsonFile = checkDetails.jsonFile
+        let pass = file in dataForChecks
+        pass = jsonFile in dataForChecks
+        let why = 'file__' + file + '__not__found'
+        if (true == pass) {
+          why = 'file__' + file + '__found'
+
+          // getting jsonX
+          let jsonFileContent = dataForChecks[jsonFile]
+          let jsonX = ''
+          if ('value' == checkDetails.jsonContains_type) {
+            jsonX = jsonFileContent[checkDetails.jsonContains]
+          }
+          checkDetails.contains.text = jsonX
+
+          let searchArray = checkDetails.contains
+          let fileContent = dataForChecks[file]
+          // Creating AST from file
+          const lexer = new Marked.Lexer()
+          const tokens = lexer.lex(fileContent)
+          const headings = tokens.filter(
+            (token) => 'heading' == token.type && 1 == token.depth
+          )
+          const headingsText = headings.map((heading) => heading.text)
+
+          let searchFail = ''
+          let noFail = true
+          for (let i = 0; i < searchArray.length; i++) {
+            pass = headingsText.includes(searchArray[i].text)
+            if (false == pass) {
+              noFail = false
+              searchFail += '_"' + searchArray[i].text + '"'
+            }
+          }
+          if (!noFail) {
+            pass = noFail
+          }
+          why = 'heading(s)' + searchFail + '__not__found'
+        }
+        return {
+          check: checkDetails.name,
+          kind: checkDetails.kind,
+          file: file,
+          pass: pass,
+          why: why,
+        }
+      },
+
+      content_contain_markdown: async function (checkDetails, dataForChecks) {
+        let file = checkDetails.file
+        let pass = file in dataForChecks
+        let why = 'file__' + file + '__not__found'
+        if (true == pass) {
+          why = 'file__' + file + '__found'
+
+          let searchArray = checkDetails.contains
+
+          let fileContent = dataForChecks[file]
+          // Creating AST from file
+          const lexer = new Marked.Lexer()
+          const tokens = lexer.lex(fileContent)
+          const headings = tokens.filter(
+            (token) => 'heading' == token.type && 2 == token.depth
+          )
+          const headingsText = headings.map((heading) => heading.text)
+
+          let searchFail = ''
+          let noFail = true
+          for (let i = 0; i < searchArray.length; i++) {
+            pass = headingsText.includes(searchArray[i].text)
+            if (false == pass) {
+              noFail = false
+              searchFail += '_"' + searchArray[i].text + '"'
+            }
+          }
+          if (!noFail) {
+            pass = noFail
+          }
+          why = 'heading(s)' + searchFail + '__not__found'
+        }
+        return {
+          check: checkDetails.name,
+          kind: checkDetails.kind,
+          file: file,
+          pass: pass,
+          why: why,
+        }
+      },
+
+      content_contain_string: async function (checkDetails, dataForChecks) {
+        let file = checkDetails.file
+        let pass = file in dataForChecks
+        let searchContent = checkDetails.contains
+        let why = 'file__' + file + '__not__found'
+
+        if (true == pass) {
+          const fileContent = dataForChecks[file]
+
+          for (let i = 0; i < searchContent.length; i++) {
+            pass = fileContent.includes(searchContent[i])
+          }
+
+          if (true == pass) {
+            why = 'content__found'
+          } else {
+            why = 'content__not__found'
+          }
+        }
+
+        return {
+          check: checkDetails.name,
+          kind: checkDetails.kind,
+          file: file,
+          pass: pass,
+          why: why,
+        }
+      },
+
+      file_exist: async function (checkDetails, dataForChecks) {
+        let file = checkDetails.file
+        let pass = file in dataForChecks
+        let why = 'file__' + file + '__not__found'
+        if (true == pass) {
+          why = 'file__' + file + '__found'
+        }
+
+        return {
+          check: checkDetails.name,
+          kind: checkDetails.kind,
+          file: file,
+          pass: pass,
+          why: why,
+        }
+      },
+
+      fileX_exist_if_contain_json: async function (
+        checkDetails,
+        dataForChecks
+      ) {
+        let file = checkDetails.file
+        let fileX = checkDetails.fileX
+        let pass = file in dataForChecks
+        let why = 'file__' + file + '__not__found'
+        let searchContent = checkDetails.contains
+        let searchIsNot = checkDetails.contains_is_not
+        let containsType = checkDetails.contains_type
+        let config = checkDetails.config
+
+        if (true == pass) {
+          const fileContent = dataForChecks[file]
+
+          // add in "if else if" or switch clause if searching for json value at any point
+          let searchIs = Hoek.reach(fileContent, searchContent)
+          pass = null != searchIs && searchIsNot != searchIs
+
+          if (true == pass) {
+            if ('js' == config) {
+              fileX = searchIs
+              pass = fileX in dataForChecks
+            }
+            if ('ts' == config) {
+              fileX = Path.basename(searchIs, '.js') + '.ts'
+              pass = fileX in dataForChecks
+            }
 
             if (true == pass) {
-              why = 'branch__correct'
+              why = 'file__' + fileX + '__found'
             } else {
-              why = 'branch__incorrect'
+              why = 'file__' + fileX + '__not__found'
             }
+          } else {
+            why = 'invalid__search__value'
           }
+        }
 
-          return {
-            check: checkDetails.name,
-            kind: checkDetails.kind,
-            file: file,
-            pass: pass,
-            why: why,
-          }
-        },
-
-        content_contain_json: async function (checkDetails, dataForChecks) {
-          let file = checkDetails.file
-          let pass = file in dataForChecks
-          let searchKey = checkDetails.contains_key
-          let searchValue = checkDetails.contains_value
-          let containsType = checkDetails.contains_type
-          let why = 'file__' + file + '__not__found'
-
-          if (true == pass) {
-            const fileContent = dataForChecks[file]
-            if ('key' == containsType) {
-              pass = null != Hoek.reach(fileContent, searchKey)
-            } else if ('value' == containsType) {
-              pass = Hoek.reach(fileContent, searchKey).includes(searchValue)
-            } else {
-              pass = false
-            }
-
-            if (true == pass) {
-              why = 'content__found'
-            } else {
-              why = 'content__not__found'
-            }
-          }
-
-          return {
-            check: checkDetails.name,
-            kind: checkDetails.kind,
-            file: file,
-            pass: pass,
-            why: why,
-          }
-        },
-
-        content_contain_jsonX_in_markdown: async function (
-          checkDetails,
-          dataForChecks
-        ) {
-          let file = checkDetails.file
-          let jsonFile = checkDetails.jsonFile
-          let pass = file in dataForChecks
-          pass = jsonFile in dataForChecks
-          let why = 'file__' + file + '__not__found'
-          if (true == pass) {
-            why = 'file__' + file + '__found'
-
-            // getting jsonX
-            let jsonFileContent = dataForChecks[jsonFile]
-            let jsonX = ''
-            if ('value' == checkDetails.jsonContains_type) {
-              jsonX = jsonFileContent[checkDetails.jsonContains]
-            }
-            checkDetails.contains.text = jsonX
-
-            let searchArray = checkDetails.contains
-            let fileContent = dataForChecks[file]
-            // Creating AST from file
-            const lexer = new Marked.Lexer()
-            const tokens = lexer.lex(fileContent)
-            const headings = tokens.filter(
-              (token) => 'heading' == token.type && 1 == token.depth
-            )
-            const headingsText = headings.map((heading) => heading.text)
-
-            let searchFail = ''
-            let noFail = true
-            for (let i = 0; i < searchArray.length; i++) {
-              pass = headingsText.includes(searchArray[i].text)
-              if (false == pass) {
-                noFail = false
-                searchFail += '_"' + searchArray[i].text + '"'
-              }
-            }
-            if (!noFail) {
-              pass = noFail
-            }
-            why = 'heading(s)' + searchFail + '__not__found'
-          }
-          return {
-            check: checkDetails.name,
-            kind: checkDetails.kind,
-            file: file,
-            pass: pass,
-            why: why,
-          }
-        },
-
-        content_contain_markdown: async function (checkDetails, dataForChecks) {
-          let file = checkDetails.file
-          let pass = file in dataForChecks
-          let why = 'file__' + file + '__not__found'
-          if (true == pass) {
-            why = 'file__' + file + '__found'
-
-            let searchArray = checkDetails.contains
-
-            let fileContent = dataForChecks[file]
-            // Creating AST from file
-            const lexer = new Marked.Lexer()
-            const tokens = lexer.lex(fileContent)
-            const headings = tokens.filter(
-              (token) => 'heading' == token.type && 2 == token.depth
-            )
-            const headingsText = headings.map((heading) => heading.text)
-
-            let searchFail = ''
-            let noFail = true
-            for (let i = 0; i < searchArray.length; i++) {
-              pass = headingsText.includes(searchArray[i].text)
-              if (false == pass) {
-                noFail = false
-                searchFail += '_"' + searchArray[i].text + '"'
-              }
-            }
-            if (!noFail) {
-              pass = noFail
-            }
-            why = 'heading(s)' + searchFail + '__not__found'
-          }
-          return {
-            check: checkDetails.name,
-            kind: checkDetails.kind,
-            file: file,
-            pass: pass,
-            why: why,
-          }
-        },
-
-        content_contain_string: async function (checkDetails, dataForChecks) {
-          let file = checkDetails.file
-          let pass = file in dataForChecks
-          let searchContent = checkDetails.contains
-          let why = 'file__' + file + '__not__found'
-
-          if (true == pass) {
-            const fileContent = dataForChecks[file]
-
-            for (let i = 0; i < searchContent.length; i++) {
-              pass = fileContent.includes(searchContent[i])
-            }
-
-            if (true == pass) {
-              why = 'content__found'
-            } else {
-              why = 'content__not__found'
-            }
-          }
-
-          return {
-            check: checkDetails.name,
-            kind: checkDetails.kind,
-            file: file,
-            pass: pass,
-            why: why,
-          }
-        },
-
-        file_exist: async function (checkDetails, dataForChecks) {
-          let file = checkDetails.file
-          let pass = file in dataForChecks
-          let why = 'file__' + file + '__not__found'
-          if (true == pass) {
-            why = 'file__' + file + '__found'
-          }
-
-          return {
-            check: checkDetails.name,
-            kind: checkDetails.kind,
-            file: file,
-            pass: pass,
-            why: why,
-          }
-        },
-
-        fileX_exist_if_contain_json: async function (
-          checkDetails,
-          dataForChecks
-        ) {
-          let file = checkDetails.file
-          let fileX = checkDetails.fileX
-          let pass = file in dataForChecks
-          let why = 'file__' + file + '__not__found'
-          let searchContent = checkDetails.contains
-          let searchIsNot = checkDetails.contains_is_not
-          let containsType = checkDetails.contains_type
-          let config = checkDetails.config
-
-          if (true == pass) {
-            const fileContent = dataForChecks[file]
-
-            // add in "if else if" or switch clause if searching for json value at any point
-            let searchIs = Hoek.reach(fileContent, searchContent)
-            pass = null != searchIs && searchIsNot != searchIs
-
-            if (true == pass) {
-              if ('js' == config) {
-                fileX = searchIs
-                pass = fileX in dataForChecks
-              }
-              if ('ts' == config) {
-                fileX = Path.basename(searchIs, '.js') + '.ts'
-                pass = fileX in dataForChecks
-              }
-
-              if (true == pass) {
-                why = 'file__' + fileX + '__found'
-              } else {
-                why = 'file__' + fileX + '__not__found'
-              }
-            } else {
-              why = 'invalid__search__value'
-            }
-          }
-
-          return {
-            check: checkDetails.name,
-            kind: checkDetails.kind,
-            file: file,
-            pass: pass,
-            why: why,
-          }
-        },
-      }
+        return {
+          check: checkDetails.name,
+          kind: checkDetails.kind,
+          file: file,
+          pass: pass,
+          why: why,
+        }
+      },
     }
   },
 }
