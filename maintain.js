@@ -116,10 +116,12 @@ module.exports = {
     async function runChecksPrep({ exclude = [], include = [] }) {
       // reading client's json files in
       const jsonPromise = Filehound.create()
+        .depth(0) // top-level json files
         .paths(process.cwd())
-        .discard(/node_modules/, /.git/)
+        .discard(/coverage/, /node_modules/, /.git/)
         .ext('json')
         .find()
+
       const jsonFiles = await jsonPromise
       if (null == jsonFiles)
         throw new Error(
