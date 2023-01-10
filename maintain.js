@@ -117,9 +117,10 @@ module.exports = {
       // reading client's json files in
       const jsonPromise = Filehound.create()
         .paths(process.cwd())
-        .discard(/node_modules/, /.git/)
+        .discard(/coverage/, /node_modules/, /.git/)
         .ext('json')
         .find()
+
       const jsonFiles = await jsonPromise
       if (null == jsonFiles)
         throw new Error(
@@ -153,7 +154,7 @@ module.exports = {
         dataForChecks[fileName] = fileContent
 
         //to get package and main name from package.json file
-        if ('package.json' == fileName) {
+        if ( (process.cwd() + '/' + 'package.json') == filePath ) {
           dataForChecks.packageName = fileContent.name
           dataForChecks.orgName = fileContent.repository.url.split('/')[3]
         }
