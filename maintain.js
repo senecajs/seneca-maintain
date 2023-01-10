@@ -116,7 +116,6 @@ module.exports = {
     async function runChecksPrep({ exclude = [], include = [] }) {
       // reading client's json files in
       const jsonPromise = Filehound.create()
-        .depth(0) // top-level json files
         .paths(process.cwd())
         .discard(/coverage/, /node_modules/, /.git/)
         .ext('json')
@@ -155,7 +154,7 @@ module.exports = {
         dataForChecks[fileName] = fileContent
 
         //to get package and main name from package.json file
-        if ('package.json' == fileName) {
+        if ( (process.cwd() + '/' + 'package.json') == filePath ) {
           dataForChecks.packageName = fileContent.name
           dataForChecks.orgName = fileContent.repository.url.split('/')[3]
         }
