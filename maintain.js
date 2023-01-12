@@ -115,6 +115,19 @@ module.exports = {
 
     async function runChecksPrep({ exclude = [], include = [] }) {
       // reading client's json files in
+      
+      function fileNotTopLevel(fileName, filePath, topLevelFiles) {
+      	let match = false
+        for(let topLevelFile of topLevelFiles) {
+          match = fileName == topLevelFile && 
+            filePath != (process.cwd() + '/' + topLevelFile)
+          if (match) {
+            break
+          }
+        }
+        return match
+      }
+      
       const jsonPromise = Filehound.create()
         .paths(process.cwd())
         .discard(/coverage/, /node_modules/, /.git/)
@@ -153,8 +166,8 @@ module.exports = {
 
         dataForChecks[fileName] = fileContent
 
-        //to get package and main name from package.json file
-        if ( (process.cwd() + '/' + 'package.json') == filePath ) {
+        // to get package and main name from top-level package.json file
+        if (process.cwd() + '/' + 'package.json' == filePath) {
           dataForChecks.packageName = fileContent.name
           dataForChecks.orgName = fileContent.repository.url.split('/')[3]
         }
@@ -162,11 +175,17 @@ module.exports = {
 
       // For config def
       let fileExts = []
+      let topLevelFilesToCheck = [ 'README.md', ]
 
       for (let s = 0; s < stringFiles.length; s++) {
         let filePath = stringFiles[s]
 
         let fileName = Path.basename(filePath)
+        
+        if (fileNotTopLevel(fileName, filePath, topLevelFilesToCheck)) {
+          continue
+        }
+        
         fileExts.push(Path.extname(fileName))
         let fileContent = Fs.readFileSync(filePath, 'utf-8')
         if (null == fileContent)
