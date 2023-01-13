@@ -119,6 +119,7 @@ module.exports = {
         .paths(process.cwd())
         .discard(/coverage/, /node_modules/, /.git/)
         .ext('json')
+        .depth(0)
         .find()
 
       const jsonFiles = await jsonPromise
@@ -131,6 +132,7 @@ module.exports = {
       const stringPromise = Filehound.create()
         .paths(process.cwd())
         .discard(/node_modules/, /.git/, /.json/)
+        .depth(0)
         .find()
       const stringFiles = await stringPromise
       // add specific git files for checks
