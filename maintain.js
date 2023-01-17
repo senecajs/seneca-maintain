@@ -158,7 +158,11 @@ module.exports = {
         // to get package and main name from top-level package.json file
         if (process.cwd() + '/' + 'package.json' == filePath) {
           dataForChecks.packageName = fileContent.name
-          dataForChecks.orgName = fileContent.repository.url.split('/')[3]
+          try {
+            dataForChecks.orgName = fileContent.repository.url.split('/')[3]
+          } catch (error) {
+            dataForChecks.orgName = '+++illegalchar+++'
+          }
         }
       }
 
@@ -244,7 +248,12 @@ module.exports = {
         let containsType = checkDetails.contains_type
         let why = 'file__' + file + '__not__found'
 
-        if (true == pass) {
+        // Pass definition specific to url_pkgjson check
+        if ('url_pkgjson' == checkDetails.name) {
+          pass = dataForChecks.orgName != '+++illegalchar+++'
+        }
+
+        if (pass) {
           const fileContent = dataForChecks[file]
           if ('key' == containsType) {
             pass = null != Hoek.reach(fileContent, searchKey)
@@ -254,11 +263,13 @@ module.exports = {
             pass = false
           }
 
-          if (true == pass) {
+          if (pass) {
             why = 'content__found'
           } else {
             why = 'content__not__found'
           }
+        } else {
+          why = 'content__not__found'
         }
 
         return {
