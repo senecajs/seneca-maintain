@@ -1,8 +1,8 @@
 module.exports = {
   checkList: {
     check_default: {
-      include: [/.*/],
-      exclude: [/.^/],
+      include_orgRepo: [/.*/],
+      exclude_orgRepo: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -12,8 +12,8 @@ module.exports = {
     },
 
     content_readme: {
-      include: [/.*/],
-      exclude: [/.^/],
+      include_orgRepo: [/.*/],
+      exclude_orgRepo: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -23,8 +23,8 @@ module.exports = {
     },
 
     content_gitignore: {
-      include: [/.*/],
-      exclude: [/.^/],
+      include_orgRepo: [/.*/],
+      exclude_orgRepo: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -34,8 +34,8 @@ module.exports = {
     },
 
     exist_codeconduct: {
-      include: [/.*/],
-      exclude: [/.^/],
+      include_orgRepo: [/.*/],
+      exclude_orgRepo: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -44,8 +44,8 @@ module.exports = {
     },
 
     exist_dist: {
-      include: [/.*/],
-      exclude: [/.^/],
+      include_orgRepo: [/.*/],
+      exclude_orgRepo: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'ts',
@@ -58,8 +58,8 @@ module.exports = {
     },
 
     exist_entry: {
-      include: [/.*/],
-      exclude: [/.^/],
+      include_orgRepo: [/.*/],
+      exclude_orgRepo: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'js',
@@ -72,8 +72,8 @@ module.exports = {
     },
 
     exist_license: {
-      include: [/.*/],
-      exclude: [/.^/],
+      include_orgRepo: [/.*/],
+      exclude_orgRepo: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -82,8 +82,8 @@ module.exports = {
     },
 
     exist_pkgjson: {
-      include: [/.*/],
-      exclude: [/.^/],
+      include_orgRepo: [/.*/],
+      exclude_orgRepo: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -92,8 +92,8 @@ module.exports = {
     },
 
     exist_readme: {
-      include: [/.*/],
-      exclude: [/.^/],
+      include_orgRepo: [/.*/],
+      exclude_orgRepo: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -102,8 +102,8 @@ module.exports = {
     },
 
     readme_title: {
-      include: [/.*/],
-      exclude: [/.^/],
+      include_orgRepo: [/.*/],
+      exclude_orgRepo: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -116,8 +116,8 @@ module.exports = {
     },
 
     readme_headings: {
-      include: [/.*/],
-      exclude: [/.^/],
+      include_orgRepo: [/.*/],
+      exclude_orgRepo: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -136,8 +136,8 @@ module.exports = {
     },
 
     scoped_package: {
-      include: [/senecajs/],
-      exclude: [/.^/],
+      include_orgRepo: [/senecajs/],
+      exclude_orgRepo: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -149,8 +149,8 @@ module.exports = {
     },
 
     // senecajs_package: {
-    //   include: [/.*/],
-    //   exclude: [/.^/],
+    //   include_orgRepo: [/.*/],
+    //   exclude_orgRepo: [/.^/],
     //   class: 'secondary',
     //   secondary: null,
     //   config: 'base',
@@ -162,8 +162,8 @@ module.exports = {
     // },
 
     test_pkgjson: {
-      include: [/.*/],
-      exclude: [/.^/],
+      include_orgRepo: [/.*/],
+      exclude_orgRepo: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -174,8 +174,8 @@ module.exports = {
     },
 
     url_pkgjson: {
-      include: [/.*/],
-      exclude: [/.^/],
+      include_orgRepo: [/.*/],
+      exclude_orgRepo: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',
@@ -186,8 +186,8 @@ module.exports = {
     },
 
     version_codeconduct: {
-      include: [/.*/],
-      exclude: [/.^/],
+      include_orgRepo: [/.*/],
+      exclude_orgRepo: [/.^/],
       class: 'primary',
       secondary: null,
       config: 'base',

@@ -81,10 +81,10 @@ module.exports = {
         // }
 
         if (
-          checkDetails.include[0].test(
+          checkDetails.include_orgRepo[0].test(
             dataForChecks.orgName.concat('/', dataForChecks.packageName)
           ) &&
-          !checkDetails.exclude[0].test(
+          !checkDetails.exclude_orgRepo[0].test(
             dataForChecks.orgName.concat('/', dataForChecks.packageName)
           )
         ) {
