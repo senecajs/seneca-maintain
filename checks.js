@@ -173,6 +173,18 @@ module.exports = {
       contains_type: 'key',
     },
 
+    url_pkgjson: {
+      include: [/.*/],
+      exclude: [/.^/],
+      class: 'primary',
+      secondary: null,
+      config: 'base',
+      kind: 'content_contain_json',
+      file: 'package.json',
+      contains_key: ['repository', 'url'],
+      contains_type: 'key',
+    },
+
     version_codeconduct: {
       include: [/.*/],
       exclude: [/.^/],
