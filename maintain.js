@@ -129,8 +129,12 @@ module.exports = {
         )
 
       // non-json files
+      let filePaths = [
+        process.cwd() + '/dist/',
+        process.cwd() + '/src/',
+      ].filter((path) => Fs.existsSync(path))
       const stringPromise = Filehound.create()
-        .paths(process.cwd())
+        .paths(process.cwd(), ...filePaths)
         .discard(/node_modules/, /.git/, /.json/)
         .depth(0)
         .find()
