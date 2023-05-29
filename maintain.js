@@ -163,7 +163,7 @@ module.exports = {
         if (process.cwd() + '/' + 'package.json' == filePath) {
           dataForChecks.packageName = fileContent.name
           let repo_url_rx =
-            /(git@|(git|(git\+)*https):\/\/)github.com(\/|:)([a-z]+)\/[a-z|-]+(.git)*/
+            /(git@|(git|(git\+)*https):\/\/)github.com(\/|:)([a-z]+)\/[a-z0-9-]+(.git)*/
           dataForChecks.orgName =
             fileContent.repository.url.match(repo_url_rx)?.[5]
         }
