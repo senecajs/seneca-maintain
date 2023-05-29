@@ -162,14 +162,10 @@ module.exports = {
         // to get package and main name from top-level package.json file
         if (process.cwd() + '/' + 'package.json' == filePath) {
           dataForChecks.packageName = fileContent.name
-          try {
-            let repo_url_rx =
-              /(git@|(git|(git\+)*https):\/\/)github.com(\/|:)[a-z]+\/[a-z|-]+(.git)*/
-            dataForChecks.orgName =
-              fileContent.repository.url.match(repo_url_rx)[5]
-          } catch (error) {
-            dataForChecks.orgName = null
-          }
+          let repo_url_rx =
+            /(git@|(git|(git\+)*https):\/\/)github.com(\/|:)([a-z]+)\/[a-z|-]+(.git)*/
+          dataForChecks.orgName =
+            fileContent.repository.url.match(repo_url_rx)?.[5]
         }
       }
 
