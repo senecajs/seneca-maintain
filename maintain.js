@@ -162,11 +162,10 @@ module.exports = {
         // to get package and main name from top-level package.json file
         if (process.cwd() + '/' + 'package.json' == filePath) {
           dataForChecks.packageName = fileContent.name
-          try {
-            dataForChecks.orgName = fileContent.repository.url.split('/')[3]
-          } catch (error) {
-            dataForChecks.orgName = '+++illegalchar+++'
-          }
+          let repo_url_rx =
+            /(git@|(git|(git\+)*https):\/\/)github.com(\/|:)([a-z]+)\/[a-z0-9-]+(.git)*/
+          dataForChecks.orgName =
+            fileContent.repository.url.match(repo_url_rx)?.[5]
         }
       }
 
@@ -254,7 +253,7 @@ module.exports = {
 
         // Pass definition specific to url_pkgjson check
         if ('url_pkgjson' == checkDetails.name) {
-          pass = dataForChecks.orgName != '+++illegalchar+++'
+          pass = dataForChecks.orgName != null
         }
 
         if (pass) {
