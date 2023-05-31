@@ -125,14 +125,13 @@ module.exports = {
 
     async function runChecksPrep({ exclude = [], include = [] }) {
       // reading client's json files in
-      const jsonPromise = Filehound.create()
+      const jsonFiles = await Filehound.create()
         .paths(process.cwd())
         .discard(/coverage/, /node_modules/, /.git/)
         .ext('json')
         .depth(0)
         .find()
 
-      const jsonFiles = await jsonPromise
       if (null == jsonFiles)
         throw new Error(
           'Local JSON file names not found correctly - cannot run checks\n'
@@ -143,12 +142,11 @@ module.exports = {
         process.cwd() + '/dist/',
         process.cwd() + '/src/',
       ].filter((path) => Fs.existsSync(path))
-      const stringPromise = Filehound.create()
+      const stringFiles = await Filehound.create()
         .paths(process.cwd(), ...filePaths)
         .discard(/node_modules/, /.git/, /.json/)
         .depth(0)
         .find()
-      const stringFiles = await stringPromise
       // add specific git files for checks
       stringFiles.push(process.cwd() + '/.git/config')
       stringFiles.push(process.cwd() + '/.gitignore')
