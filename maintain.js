@@ -30,7 +30,13 @@ module.exports = {
     return relCheckList
   },
 
-  Maintain: function ({ throwChecks = true, exclude = [], include = [] } = {}) {
+  Maintain: function ({
+    throwChecks = true,
+    returnBool = false,
+    runPath = '',
+    exclude = [],
+    include = [],
+  } = {}) {
     // Node modules
     const Path = require('path')
     const Fs = require('fs')
@@ -106,10 +112,14 @@ module.exports = {
           )
         }
       }
-      if (throwChecks && 0 < resultsLog.length) {
-        throw new Error('Failed Checks:\n' + resultsLog + '\n')
+      if (returnBool) {
+        return 0 == resultsLog.length
       } else {
-        return results
+        if (throwChecks && 0 < resultsLog.length) {
+          throw new Error('Failed Checks:\n' + resultsLog + '\n')
+        } else {
+          return results
+        }
       }
     }
 
