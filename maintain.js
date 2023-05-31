@@ -126,7 +126,7 @@ module.exports = {
     async function runChecksPrep({ exclude = [], include = [] }) {
       // reading client's json files in
       const jsonFiles = await Filehound.create()
-        .paths(process.cwd())
+        .paths(process.cwd() + runPath)
         .discard(/coverage/, /node_modules/, /.git/)
         .ext('json')
         .depth(0)
@@ -139,17 +139,18 @@ module.exports = {
 
       // non-json files
       let filePaths = [
-        process.cwd() + '/dist/',
-        process.cwd() + '/src/',
+        process.cwd() + runPath + '/dist/',
+        process.cwd() + runPath + '/src/',
       ].filter((path) => Fs.existsSync(path))
       const stringFiles = await Filehound.create()
-        .paths(process.cwd(), ...filePaths)
+        .paths(process.cwd() + runPath, ...filePaths)
         .discard(/node_modules/, /.git/, /.json/)
         .depth(0)
         .find()
+
       // add specific git files for checks
-      stringFiles.push(process.cwd() + '/.git/config')
-      stringFiles.push(process.cwd() + '/.gitignore')
+      stringFiles.push(process.cwd() + runPath + '/.git/config')
+      stringFiles.push(process.cwd() + runPath + '/.gitignore')
       if (null == stringFiles || 0 == Object.keys(stringFiles))
         throw new Error(
           'Local file names (excl JSON) not found correctly - cannot run checks\n'
@@ -168,7 +169,7 @@ module.exports = {
         dataForChecks[fileName] = fileContent
 
         // to get package and main name from top-level package.json file
-        if (process.cwd() + '/' + 'package.json' == filePath) {
+        if (process.cwd() + runPath + '/package.json' == filePath) {
           dataForChecks.packageName = fileContent.name
           let repo_url_rx =
             /(git@|(git|(git\+)*https):\/\/)github.com(\/|:)([a-z]+)\/[a-z0-9-]+(.git)*/
