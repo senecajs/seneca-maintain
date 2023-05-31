@@ -45,6 +45,24 @@ On success, nothing will be printed to console, and the script will continue as 
 
 ## More Examples
 
+### Return pass/fail boolean
+
+If you're only looking for a simplified output in the form of a boolean (all checks pass/at least one check has failed), then you only need to set the `returnBool` parameter to `false`.
+
+```js
+let maintainBool = await Maintain({returnBool:true})
+```
+
+### Specify path to run checks on
+
+If for example you need to run the maintain tool on one directory from another, it's possible to specify a root path. This should be the top level of the local package to test, ie. where the package.json and README.md files reside. Note that it is possible to step up levels from the current path using the `..` syntax. A forward slash must preceed any path.
+
+```js
+let maintainBool = await Maintain({runPath:'/../path/to/package'})
+```
+
+If this optional parameter is not defined, the tool will default to running from the directory it was launched from `process.cwd()`.
+
 ### Running Custom Check List
 
 It is possible to run only a select few checks, or to exclude certain ones, by making use of the optional parameters for the Maintain() function - an include array and an exclude array.
