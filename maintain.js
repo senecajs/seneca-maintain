@@ -174,7 +174,7 @@ module.exports = {
           let repo_url_rx =
             /(git@|(git|(git\+)*https):\/\/)github.com(\/|:)([a-z]+)\/[a-z0-9-]+(.git)*/
           dataForChecks.orgName =
-            fileContent.repository.url.match(repo_url_rx)?.[5]
+            fileContent.repository?.url.match(repo_url_rx)?.[5]
         }
       }
 
@@ -186,9 +186,14 @@ module.exports = {
 
         let fileName = Path.basename(filePath)
         fileExts.push(Path.extname(fileName))
-        let fileContent = Fs.readFileSync(filePath, 'utf-8')
+        let fileContent = ''
+        try {
+          fileContent = Fs.readFileSync(filePath, 'utf-8')
+        } catch (error) {
+          throw new Error('Problem reading ' + fileName + ' file\n')
+        }
         if (null == fileContent)
-          throw new Error('Problem reading ' + filename + ' file\n')
+          throw new Error('Problem reading ' + fileName + ' file\n')
 
         dataForChecks[fileName] = fileContent
       }
