@@ -127,7 +127,6 @@ module.exports = {
       // reading client's json files in
       const jsonFiles = await Filehound.create()
         .paths(process.cwd() + runPath)
-        .discard(/coverage/, /node_modules/, /.git/)
         .ext('json')
         .depth(0)
         .find()
@@ -142,15 +141,21 @@ module.exports = {
         process.cwd() + runPath + '/dist/',
         process.cwd() + runPath + '/src/',
       ].filter((path) => Fs.existsSync(path))
+
       const stringFiles = await Filehound.create()
         .paths(process.cwd() + runPath, ...filePaths)
-        .discard(/node_modules/, /.git/, /.json/)
+        .discard(/.json/)
         .depth(0)
         .find()
 
       // add specific git files for checks
-      stringFiles.push(process.cwd() + runPath + '/.git/config')
-      stringFiles.push(process.cwd() + runPath + '/.gitignore')
+      if (!exclude.includes('check_default')) {
+        stringFiles.push(process.cwd() + runPath + '/.git/config')
+      }
+      if (!exclude.includes('content_gitignore')) {
+        stringFiles.push(process.cwd() + runPath + '/.gitignore')
+      }
+
       if (null == stringFiles || 0 == Object.keys(stringFiles))
         throw new Error(
           'Local file names (excl JSON) not found correctly - cannot run checks\n'
@@ -190,10 +195,14 @@ module.exports = {
         try {
           fileContent = Fs.readFileSync(filePath, 'utf-8')
         } catch (error) {
-          throw new Error('Problem reading ' + fileName + ' file\n')
+          throw new Error(
+            'Problem reading ' + fileName + ' file (error on read)\n'
+          )
         }
         if (null == fileContent)
-          throw new Error('Problem reading ' + fileName + ' file\n')
+          throw new Error(
+            'Problem reading ' + fileName + ' file (content null)\n'
+          )
 
         dataForChecks[fileName] = fileContent
       }
