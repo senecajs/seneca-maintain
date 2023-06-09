@@ -75,16 +75,7 @@ module.exports = {
 
         let res = null
 
-        // primary/secondary check logic
-        // if (null != checkDetails.secondary) {
-        //   res = await checkKind(
-        //     checkList()[checkDetails.secondary],
-        //     dataForChecks
-        //   )
-        //   if (!res.pass) {
-        //     continue
-        //   }
-        // }
+        // primary/secondary check logic goes here
 
         if (
           checkDetails.include_orgRepo[0].test(
