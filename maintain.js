@@ -5,6 +5,7 @@ module.exports = {
     const relCheckList = {}
 
     let listToCheck = {}
+    // if checks listed in include, only run those
     if (0 != include.length) {
       listToCheck = include
     } else {
@@ -21,6 +22,7 @@ module.exports = {
       }
     }
 
+    // if checks listed in exclude, take those out
     if (0 != exclude.length) {
       for (let i = 0; i < exclude.length; i++) {
         delete relCheckList[exclude[i]]
@@ -75,8 +77,9 @@ module.exports = {
 
         let res = null
 
-        // primary/secondary check logic goes here
+        // primary/secondary check logic would go here
 
+        // include_orgRepo and exclude_orgRepo regex come from checks.js
         if (
           checkDetails.include_orgRepo[0].test(
             dataForChecks.orgName.concat('/', dataForChecks.packageName)
@@ -174,7 +177,6 @@ module.exports = {
         }
       }
 
-      // For config def
       let fileExts = []
 
       for (let s = 0; s < stringFiles.length; s++) {
