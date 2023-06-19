@@ -82,10 +82,10 @@ module.exports = {
         // include_orgRepo and exclude_orgRepo regex come from checks.js
         if (
           checkDetails.include_orgRepo[0].test(
-            dataForChecks.orgName.concat('/', dataForChecks.packageName)
+            dataForChecks.orgName?.concat('/', dataForChecks.packageName)
           ) &&
           !checkDetails.exclude_orgRepo[0].test(
-            dataForChecks.orgName.concat('/', dataForChecks.packageName)
+            dataForChecks.orgName?.concat('/', dataForChecks.packageName)
           )
         ) {
           res = await checkKind(checkDetails, dataForChecks)
