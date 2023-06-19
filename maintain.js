@@ -309,10 +309,9 @@ module.exports = {
       ) {
         let file = checkDetails.file
         let jsonFile = checkDetails.jsonFile
-        let pass = file in dataForChecks
-        pass = jsonFile in dataForChecks
+        let pass = file in dataForChecks && jsonFile in dataForChecks
         let why = 'file__' + file + '__not__found'
-        if (true == pass) {
+        if (pass) {
           why = 'file__' + file + '__found'
 
           // getting jsonX
