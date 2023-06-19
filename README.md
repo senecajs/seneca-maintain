@@ -94,7 +94,7 @@ test('maintain', Maintain)
 // With parameters
 test('maintain', async () => {
   await Maintain({
-    exclChecks: ['exist_codeconduct', 'version_codeconduct'],
+    exclude: ['exist_codeconduct', 'version_codeconduct'],
   })
 })
 ```
