@@ -161,11 +161,14 @@ module.exports = {
         let filePath = jsonFiles[j]
 
         let fileName = Path.basename(filePath)
-        let fileContent = require(filePath)
-        if (null == fileContent)
-          throw new Error('Problem reading ' + filename + ' file\n')
-
-        dataForChecks[fileName] = fileContent
+        let fileContent = null
+        try {
+          fileContent = require(filePath)
+          if (null == fileContent) { throw new Error('Problem reading ' + filename + ' file\n') }
+          dataForChecks[fileName] = fileContent
+        } catch (e) {
+          console.error(e)
+        }
 
         // to get package and main name from top-level package.json file
         if (process.cwd() + runPath + '/package.json' == filePath) {
