@@ -58,10 +58,10 @@ let maintainBool = await Maintain({returnBool:true})
 If for example you need to run the maintain tool on one directory from another, it's possible to specify a root path. This should be the top level of the local package to test, ie. where the package.json and README.md files reside. Note that it is possible to step up levels from the current path using the `..` syntax. A forward slash must preceed any path.
 
 ```js
-let maintainBool = await Maintain({runPath:'/../path/to/package'})
+await Maintain({runPath:'/../path/to/package'})
 ```
 
-If this optional parameter is not defined, the tool will default to running from the directory it was launched from `process.cwd()`.
+If this optional parameter is not defined, the tool will default to running from the directory it was launched from (`process.cwd()`).
 
 ### Running Custom Check List
 
@@ -94,7 +94,7 @@ test('maintain', Maintain)
 // With parameters
 test('maintain', async () => {
   await Maintain({
-    exclChecks: ['exist_codeconduct', 'version_codeconduct'],
+    exclude: ['exist_codeconduct', 'version_codeconduct'],
   })
 })
 ```
